@@ -9,7 +9,10 @@ async def post_help_command(msg):
 async def post_tomatos_command(msg):
     if not msg.mentions:
         return
-        
+    
+    elif bool(msg.mentions[0].bot):
+        await msg.channel.send('**LEAVE US ALONE!!!** 😡')
+
     else:
         # Get first mention in list
         target_user = msg.mentions[0].nick

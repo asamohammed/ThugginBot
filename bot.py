@@ -22,6 +22,8 @@ async def on_message(msg):
     # Process requests
     await helper.process_msg(msg)
 
+    print(msg.mentions)
+
 
 # Run bot
 bot.run(os.getenv('BOT_TOKEN'))
