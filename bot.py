@@ -1,6 +1,7 @@
 import discord
 import os
 import helper
+from sys import getsizeof
 
 bot = discord.Client(intents = discord.Intents.all())
 
@@ -22,8 +23,9 @@ async def on_message(msg):
     # Process requests
     await helper.process_msg(msg)
 
-    print(msg.mentions)
-
+    print(f'author {msg.author}')
+    print(f'channel {msg.channel.id}')
+    print(f'channel {msg.channel.name}')
 
 # Run bot
 bot.run(os.getenv('BOT_TOKEN'))
