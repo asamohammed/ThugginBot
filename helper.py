@@ -36,7 +36,9 @@ async def process_msg(msg):
 
 
     elif text.startswith('!sniped '):
-        if not (msg.mentions or msg.attachments):
+        if not msg.mentions:
+            return
+        elif not msg.attachments:
             return
         elif msg.author.id == msg.mentions[0].id:
             await msg.channel.send('Friendly Fire Warning')
