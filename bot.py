@@ -21,7 +21,7 @@ async def on_message(msg):
     # Ignore Bot messages 
     if msg.author == bot.user:
         return
-    elif not msg.channel.name == 'general':
+    elif not msg.channel.name == 'all-club-chat':
         return
     
     # Process requests
