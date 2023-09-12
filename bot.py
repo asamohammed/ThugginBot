@@ -18,21 +18,15 @@ async def on_ready():
 @bot.event
 async def on_message(msg):
 
-    # Ignore Bot messages
+    # Ignore Bot messages 
     if msg.author == bot.user:
         return
-
-    # Ignore all other chats beside general
     elif not msg.channel.name == 'general':
         return
-    
     
     # Process requests
     await helper.process_msg(msg)
 
-    print(f'author {msg.author.id}')
-    print(f'channel {msg.channel.id}')
-    print(f'channel {msg.channel.name}')
 
 # Run bot
 bot.run(os.getenv('BOT_TOKEN'))

@@ -109,3 +109,21 @@ async def add_sniped(user_id, num_sniped):
 
     finally:
         await connection.close()
+
+
+async def fetch_all_db_data():
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        db_table = await connection.fetch(f'SELECT * FROM clout_data;')
+        return db_table
+    
+    finally:
+        await connection.close()

@@ -1,4 +1,5 @@
 from random import randint
+import dbmanager
 
 
 async def post_help_command(msg):
@@ -9,7 +10,6 @@ async def post_help_command(msg):
 async def post_tomatos_command(msg):
     if not msg.mentions:
         return
-    
     elif bool(msg.mentions[0].bot):
         await msg.channel.send('**LEAVE US ALONE!!!** 😡')
 
@@ -20,8 +20,8 @@ async def post_tomatos_command(msg):
         # 1 in 20 chance of sending "this guy sticks" message instead
         random_num = randint(1, 20)
 
+        # Send "this guy stinks"
         if random_num == 20:
-            # Send "this guy stinks"
             message = f'BOOOO!!!!! 👎👎 BOOOOOO! 🍅🍅🥫🍅🍅🍅 --> **{target_user}**'
             await msg.channel.send(message)
 
@@ -30,7 +30,7 @@ async def post_tomatos_command(msg):
 
             message = f'BOOOO!!!!! 👎👎 BOOOOOO! 🍅🍅🥫🍅🍅🍅 --> **{target_user}**'
             await msg.channel.send(message)
-            
+
         else:
             # Send normal tomato
             message = f'BOOOO!!!!! 👎👎 BOOOOOO! 🍅🍅🥫🍅🍅🍅 --> **{target_user}**'
@@ -38,115 +38,113 @@ async def post_tomatos_command(msg):
 
 
 async def post_like_leaderboard(msg):
-    pass
+
+    num_users_to_show = 10
+    fetched_rows = await dbmanager.fetch_all_db_data()
+    
+    fetched_rows.sort(key=lambda x: x['likes'], reverse=True)
+
+    message = ''
+    message += '-__**Like Leaderboard**__-\n'
+
+    for i, row in enumerate(fetched_rows[:num_users_to_show]):  # Get the top 10 members
+        for member in msg.guild.members:
+            if member.id == row['user_id']:
+                message += f"{i}: {member.nick} with {row['likes']}.\n"
+                break
+
+    await msg.channel.send(message)
 
 
 async def post_dislike_leaderboard(msg):
-    pass
+
+    num_users_to_show = 10
+
+    fetched_rows = await dbmanager.fetch_all_db_data()
+    
+    fetched_rows.sort(key=lambda x: x['dislikes'], reverse=True)
+
+    message = ''
+    message += '-__**Dislike Leaderboard**__-\n'
+
+    for i, row in enumerate(fetched_rows[:num_users_to_show]):  # Get the top 10 members
+        for member in msg.guild.members:
+            if member.id == row['user_id']:
+                message += f"{i}: {member.nick} with {row['dislikes']}.\n"
+                break
+
+    await msg.channel.send(message)
 
 
 async def post_clout_leaderboard(msg):
-    pass
+    
+    num_users_to_show = 10
+
+    fetched_rows = await dbmanager.fetch_all_db_data()
+
+    fetched_rows.sort(key=lambda row: row['likes'] - row['dislikes'], reverse=True)
+
+    message = ''
+    message += '-__**Clout Leaderboard**__-\n'
+
+    for i, row in enumerate(fetched_rows[:num_users_to_show]):  # Get the top 10 members
+        for member in msg.guild.members:
+            if member.id == row['user_id']:
+                clout = row['likes'] - row['dislikes']
+                message += f"{i}: {member.nick} with {clout}.\n"
+                break
+
+    # second_message_part = ""
+
+    # for member in group['response']['members']:
+    #     if member['user_id'] == rows[lower_row_index]['id']:
+    #         clout = rows[lower_row_index]['likes'] - rows[lower_row_index]['dislikes']
+    #         second_message_part = f"{lower_row_index + offset + 1}: {member['nickname']} with {clout} clout.\n" + second_message_part
+    #         found_member = True
+    #         break
+
+    #     message += "...\n"
+    # message += second_message_part
+
+    # Send the message to the specified Discord channel
+    await msg.channel.send(message)
 
 
 async def post_kills_leaderboard(msg):
-    pass
+
+    num_users_to_show = 10
+
+    fetched_rows = await dbmanager.fetch_all_db_data()
+    
+    fetched_rows.sort(key=lambda x: x['kills'], reverse=True)
+
+    message = ''
+    message += '-__**Kills Leaderboard**__-\n'
+
+    for i, row in enumerate(fetched_rows[:num_users_to_show]):  # Get the top 10 members
+        for member in msg.guild.members:
+            if member.id == row['user_id']:
+                message += f"{i}: {member.nick} with {row['kills']}.\n"
+                break
+
+    await msg.channel.send(message)
 
 
 async def post_sniped_leaderboard(msg):
-    pass
 
+    num_users_to_show = 10
 
-""" Clout leadeboard
-import asyncio
-import asyncpg
-import aiohttp
-import discord
+    fetched_rows = await dbmanager.fetch_all_db_data()
+    
+    fetched_rows.sort(key=lambda x: x['sniped'], reverse=True)
 
-# Replace with your Discord bot token
-TOKEN = 'your_discord_bot_token'
+    message = ''
+    message += '-__**Sniped Leaderboard**__-\n'
 
-intents = discord.Intents.default()
-intents.members = True
+    for i, row in enumerate(fetched_rows[:num_users_to_show]):  # Get the top 10 members
+        for member in msg.guild.members:
+            if member.id == row['user_id']:
+                message += f"{i}: {member.nick} with {row['sniped']}.\n"
+                break
 
-client = discord.Client(intents=intents)
-
-@client.event
-async def on_ready():
-    print(f'Logged in as {client.user.name} ({client.user.id})')
-
-@client.event
-async def on_message(message):
-    if message.content.startswith('!clout'):
-        await send_clout_leaderboard(message.channel)
-
-async def send_clout_leaderboard(channel):
-    # Create a database connection pool
-    pool = await asyncpg.create_pool(
-        user='your_user',
-        password='your_password',
-        database='your_database',
-        host='your_host'
-    )
-
-    # Fetch data from the 'dislikes' table and sort it
-    async with pool.acquire() as conn:
-        rows = await conn.fetch('SELECT * FROM dislikes')
-        rows.sort(key=lambda row: row['likes'] - row['dislikes'], reverse=True)
-
-    message = ""
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(groupURL) as response:
-            group = await response.json()
-
-            rowIndex = 0
-            for i in range(1, 10):
-                if rowIndex >= len(rows):
-                    break
-
-                found_member = False
-                for member in group['response']['members']:
-                    if member['user_id'] == rows[rowIndex]['id']:
-                        clout = rows[rowIndex]['likes'] - rows[rowIndex]['dislikes']
-                        message += f"{i}: {member['nickname']} with {clout} clout.\n"
-                        found_member = True
-                        break
-
-                if not found_member:
-                    i -= 1
-                rowIndex += 1
-
-            lower_row_index = len(rows) - 1
-            offset = 0
-            second_message_part = ""
-            for i in range(1, 3):
-                if lower_row_index < rowIndex:
-                    break
-
-                found_member = False
-                for member in group['response']['members']:
-                    if member['user_id'] == rows[lower_row_index]['id']:
-                        clout = rows[lower_row_index]['likes'] - rows[lower_row_index]['dislikes']
-                        second_message_part = f"{lower_row_index + offset + 1}: {member['nickname']} with {clout} clout.\n" + second_message_part
-                        found_member = True
-                        break
-
-                if not found_member:
-                    i -= 1
-                    offset += 1
-                lower_row_index -= 1
-
-            if lower_row_index != rowIndex:
-                message += "...\n"
-            message += second_message_part
-
-    # Send the message to the specified Discord channel
-    await channel.send(message)
-
-    # Close the database connection pool
-    await pool.close()
-
-# Run the Discord bot
-client.run(TOKEN)
-"""
+    await msg.channel.send(message)
