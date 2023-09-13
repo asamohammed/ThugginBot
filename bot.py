@@ -7,7 +7,6 @@ load_dotenv()
 
 bot = discord.Client(intents = discord.Intents.all())
 
-
 # Bot Login Confirmation
 @bot.event
 async def on_ready():
