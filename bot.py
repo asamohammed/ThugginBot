@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-bot = discord.Client(intents = discord.Intents.all())
+bot = discord.AutoShardedClient(intents = discord.Intents.all())
 
 # Bot Login Confirmation
 @bot.event
