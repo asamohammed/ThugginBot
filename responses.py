@@ -15,7 +15,11 @@ async def post_tomatos_command(msg):
 
     else:
         # Get first mention in list
-        target_user = msg.mentions[0].nick
+        # if msg.mentions[0].nick:
+        if False:
+            target_user = msg.mentions[0].nick
+        else:
+            target_user = msg.mentions[0].user
         
         # 1 in 20 chance of sending "this guy sticks" message instead
         random_num = randint(1, 20)
