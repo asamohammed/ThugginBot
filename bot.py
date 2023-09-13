@@ -21,11 +21,12 @@ async def on_message(msg):
     # Ignore Bot messages 
     if msg.author == bot.user:
         return
-    # elif (not msg.channel.name == 'all-club-chat') or (not msg.channel.name == 'general'):
-    #     return
     
-    # Process requests
-    await helper.process_msg(msg)
+    elif msg.channel.name == 'bot-testing':
+        await helper.process_msg(msg)
+
+    elif msg.channel.name == 'all-club-chat':
+        await helper.process_msg(msg)
 
 
 # Run bot
