@@ -40,6 +40,11 @@ async def post_tomatos_command(msg):
             await msg.channel.send(message)
 
 
+async def post_sawthat(msg):
+    message = 'https://cdn.discordapp.com/attachments/1151212102292353104/1160671112150134835/IMG_2100.JPG?ex=65358235&is=65230d35&hm=62829a9020e54110005b8593642263bde80732505a99aaff0e516fb1f35cd86e&'
+    await msg.channel.send(message)
+    
+
 async def post_like_leaderboard(msg):
 
     # Fetch Data
