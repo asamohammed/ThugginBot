@@ -5,12 +5,12 @@ async def process_msg(msg):
     # Get message text
     text = msg.content.lower()
 
+    # --== General Commands ==--
     if text.startswith('!help'):
         await responses.post_help_command(msg)
 
         print('POST - HelpCommand')
     
-
     elif text.startswith('!tomatoes '):
         if msg.author.id == msg.mentions[0].id:
             await msg.channel.send("*STOOPID, I'M NOT GONNA LET YOU GET THE CHANCE*")
@@ -18,14 +18,14 @@ async def process_msg(msg):
             await responses.post_tomatos_command(msg)
 
         print('POST - TomatoesCommand')
-
-
-    elif text.startswith('!sawthat '):
+    
+    elif text.startswith('!sawthat'):
         await responses.post_sawthat(msg)
 
-        print('POST - SawThat')
+        print('POST - SawThat') 
 
 
+    # --== Like/Dislike Commands ==--
     elif text.startswith('!like '):
         if msg.author.id == msg.mentions[0].id:
             await msg.channel.send('*STOOPID, I\'M NOT GONNA LET YOU GET THE CHANCE*')
@@ -39,7 +39,6 @@ async def process_msg(msg):
             await dbmanager.add_likes(target_user, 1)
 
         print('ADD - Like')
-
 
     elif text.startswith('!dislike '):
         if msg.author.id == msg.mentions[0].id:
@@ -55,7 +54,23 @@ async def process_msg(msg):
 
         print('ADD - Dislike')
 
+    elif text.startswith('!likeleaderboard'):
+        await responses.post_like_leaderboard(msg)
 
+        print('POST - Like_leaderboard')
+
+    elif text.startswith('!dislikeleaderboard'):
+        await responses.post_dislike_leaderboard(msg)
+
+        print('POST - Disike_leaderboard')
+
+    elif text.startswith('!cloutleaderboard'):
+        await responses.post_clout_leaderboard(msg)
+
+        print('POST - Clout_leaderboard')
+
+
+    # --== Sniped Commands ==--
     elif text.startswith('!sniped '):
         if msg.author.id == msg.mentions[0].id:
             await msg.channel.send('*STOOPID, I\'M NOT GONNA LET YOU GET THE CHANCE*')
@@ -76,30 +91,10 @@ async def process_msg(msg):
 
         print('ADD - Sniped')
 
-
-    elif text.startswith('!likeleaderboard'):
-        await responses.post_like_leaderboard(msg)
-
-        print('POST - Like_leaderboard')
-
-
-    elif text.startswith('!dislikeleaderboard'):
-        await responses.post_dislike_leaderboard(msg)
-
-        print('POST - Disike_leaderboard')
-
-    
-    elif text.startswith('!cloutleaderboard'):
-        await responses.post_clout_leaderboard(msg)
-
-        print('POST - Clout_leaderboard')
-
-
     elif text.startswith('!killsleaderboard'):
         await responses.post_kills_leaderboard(msg)
 
         print('POST - Kills_leaderboard')
-
     
     elif text.startswith('!snipedleaderboard'):
         await responses.post_sniped_leaderboard(msg)

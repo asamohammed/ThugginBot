@@ -2,10 +2,10 @@ from random import randint
 import dbmanager
 
 
+# --== General Commands ==--
 async def post_help_command(msg):
     message = "**--- __Commands:__ ---**\n**!sawthat** Send saw that meme.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
     await msg.channel.send(message)
-
 
 async def post_tomatos_command(msg):
     if not msg.mentions:
@@ -39,16 +39,15 @@ async def post_tomatos_command(msg):
             message = f'BOOOO!!!!! 👎👎 BOOOOOO! 🍅🍅🥫🍅🍅🍅 --> **{target_user}**'
             await msg.channel.send(message)
 
-
 async def post_sawthat(msg):
     message = 'https://cdn.discordapp.com/attachments/1151212102292353104/1160671112150134835/IMG_2100.JPG?ex=65358235&is=65230d35&hm=62829a9020e54110005b8593642263bde80732505a99aaff0e516fb1f35cd86e&'
     await msg.channel.send(message)
     
-
+# --== Like/Dislike Commands ==--
 async def post_like_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.fetch_all_db_data()
+    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['likes'], reverse=True)
@@ -72,11 +71,10 @@ async def post_like_leaderboard(msg):
     # Send message 
     await msg.channel.send(message)
 
-
 async def post_dislike_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.fetch_all_db_data()
+    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['dislikes'], reverse=True)
@@ -100,11 +98,10 @@ async def post_dislike_leaderboard(msg):
     # Send message 
     await msg.channel.send(message)
 
-
 async def post_clout_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.fetch_all_db_data()
+    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda row: row['likes'] - row['dislikes'], reverse=True)
@@ -129,10 +126,11 @@ async def post_clout_leaderboard(msg):
     await msg.channel.send(message)
 
 
+# --== Sniped Commands ==--
 async def post_kills_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.fetch_all_db_data()
+    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['kills'], reverse=True)
@@ -156,11 +154,10 @@ async def post_kills_leaderboard(msg):
     # Send message 
     await msg.channel.send(message)
 
-
 async def post_sniped_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.fetch_all_db_data()
+    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['sniped'], reverse=True)

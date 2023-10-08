@@ -111,7 +111,7 @@ async def add_sniped(user_id, num_sniped):
         await connection.close()
 
 
-async def fetch_all_db_data():
+async def cloutbot_fetch_all_db_data():
     # Connect to Database
     connection = await asyncpg.connect(
         user=os.getenv('DB_USERNAME'),
