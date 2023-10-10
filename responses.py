@@ -47,7 +47,7 @@ async def post_sawthat(msg):
 async def post_like_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
+    fetched_rows = await dbmanager.fetch_all_cloutbot_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['likes'], reverse=True)
@@ -74,7 +74,7 @@ async def post_like_leaderboard(msg):
 async def post_dislike_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
+    fetched_rows = await dbmanager.fetch_all_cloutbot_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['dislikes'], reverse=True)
@@ -101,7 +101,7 @@ async def post_dislike_leaderboard(msg):
 async def post_clout_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
+    fetched_rows = await dbmanager.fetch_all_cloutbot_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda row: row['likes'] - row['dislikes'], reverse=True)
@@ -130,7 +130,7 @@ async def post_clout_leaderboard(msg):
 async def post_kills_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
+    fetched_rows = await dbmanager.fetch_all_cloutbot_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['kills'], reverse=True)
@@ -157,7 +157,7 @@ async def post_kills_leaderboard(msg):
 async def post_sniped_leaderboard(msg):
 
     # Fetch Data
-    fetched_rows = await dbmanager.cloutbot_fetch_all_db_data()
+    fetched_rows = await dbmanager.fetch_all_cloutbot_data()
 
     # Sort Data
     fetched_rows.sort(key=lambda x: x['sniped'], reverse=True)
@@ -180,3 +180,4 @@ async def post_sniped_leaderboard(msg):
 
     # Send message 
     await msg.channel.send(message)
+    
