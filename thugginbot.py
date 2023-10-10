@@ -7,7 +7,7 @@ async def handle_thugginbot_message(msg):
     message_history_limit = 20
 
     current_word = ''
-    current_word_print_list = []
+    # current_word_print_list = []
 
     async for message in msg.channel.history(limit=message_history_limit):
         text = message.content
@@ -15,7 +15,7 @@ async def handle_thugginbot_message(msg):
         if len(text) == 1 and text.isalpha():
             text = text.upper()
             current_word = text + current_word
-            current_word_print_list.append(current_word)
+            # current_word_print_list.append(current_word)
 
             # Words can't be less that 3 char, no need to use db resources
             if len(current_word) >= 3:
@@ -32,8 +32,8 @@ async def handle_thugginbot_message(msg):
                 
         else:
             # Adding them to a list, so you don't get spammed when words are sent
-            current_word = current_word_print_list[-1]
-            print(current_word)
+            # current_word = current_word_print_list[-1]
+            # print(current_word)
             
             # Clear current word and the print list
             current_word = ''
