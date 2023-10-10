@@ -4,7 +4,7 @@ from dbmanager import check_fetch_thugginbot_word
 # People mess up the thugginword so thould be pluggin in hard code
 
 async def handle_thugginbot_message(msg):
-    message_history_limit = 5
+    message_history_limit = 20
 
     current_word = ''
     current_word_print_list = []
@@ -17,12 +17,19 @@ async def handle_thugginbot_message(msg):
             current_word = text + current_word
             current_word_print_list.append(current_word)
 
-            fetched_row = await check_fetch_thugginbot_word(current_word)
+            # Words can't be less that 3 char, no need to use db resources
+            if len(current_word) >= 3:
+                fetched_row = await check_fetch_thugginbot_word(current_word)
 
-            if len(fetched_row) == 1:
-                spaced_current_word = current_word.replace("", " ")[1: -1]
-                await msg.channel.send(spaced_current_word)
+                if len(fetched_row) == 1:
+                    if fetched_row[0]['img_url']:
+                        await msg.channel.send(fetched_row[0]['img_url'])
 
+                    spaced_current_word = current_word.replace("", " ")[1: -1]
+                    await msg.channel.send(spaced_current_word)
+                    
+                    break
+                
         else:
             # Adding them to a list, so you don't get spammed when words are sent
             current_word = current_word_print_list[-1]
@@ -32,13 +39,3 @@ async def handle_thugginbot_message(msg):
             current_word = ''
             current_word_print_list.clear()
             break
-
-
-async def add_thugginbot_word()
-
-"""
-[
-    <Message 
-    id=1160742452739710986 
-    channel=<TextChannel id=1151212102292353104 name='bot-testing' position=0 nsfw=False news=False category_id=None> type=<MessageType.default: 0> author=<Member id=262291517098426368 name='asa.22' global_name='Asa' bot=False nick='Elsa' guild=<Guild id=1098029040381739078 name='UB Club Ultimate' shard_id=0 chunked=True member_count=126>> flags=<MessageFlags value=0>>]
-"""

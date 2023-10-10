@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # TODO: Create a db pool and then just connect
+# TODO: make sure the suggest function ignores no img calls
 
 # --== CloutBot Data ==--
 async def add_likes(user_id, num_likes):
@@ -161,7 +162,7 @@ async def check_fetch_thugginbot_word(current_word):
     )
 
     try:
-        db_table = await connection.fetch(f'SELECT * FROM words WHERE word={current_word};')
+        db_table = await connection.fetch(f"SELECT * FROM thugginbot_words WHERE word='{current_word}';")
         return db_table
     
     finally:
@@ -179,7 +180,12 @@ async def add_thugginbot_word(word, img_url):
     )
 
     try:
-        await connection.execute(f'INSERT INTO thugginbot_words VALUES ({word}, {img_url});')
+        # if img_url == 'no-img-input':
+        await connection.execute(f"INSERT INTO thugginbot_words VALUES ('{word}', '{img_url}');")
+        # else:
+        #     await connection.execute(f"INSERT INTO thugginbot_words (word) VALUES ('{word}');")
+
+            # await client.query(`INSERT INTO words VALUES ('${newword}', '${url}'); DELETE FROM suggest WHERE word='${word}';`);
 
     finally:
         await connection.close()
@@ -196,7 +202,7 @@ async def delete_thugginbot_word(word_to_delete):
     )
 
     try:
-        await connection.execute(f'DELETE FROM thugginbot_words WHERE word={word_to_delete};')
+        await connection.execute(f"DELETE FROM thugginbot_words WHERE word='{word_to_delete}';")
 
     finally:
         await connection.close()

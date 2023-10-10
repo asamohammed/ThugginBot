@@ -15,7 +15,7 @@ def get_img_url(img_path):
 
     files = {'file': ('ThugginBot_ImgService.png', open(img_path, 'rb')),}
 
-    data = {'content': 'ThugginBot Img Service'}
+    data = {'content': 'Custom ThugginBot Img Service'}
 
     # Posting img in discord and getting url
     response = requests.post(
@@ -27,5 +27,3 @@ def get_img_url(img_path):
     data = response.json()
 
     return data['attachments'][0]['url']
-
-print(get_img_url('img.png'))
