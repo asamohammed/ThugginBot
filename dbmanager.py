@@ -4,9 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# TODO: Create a db pool and then just connect
 
+# --== CloutBot Data ==--
 async def add_likes(user_id, num_likes):
-
     # Connect to Database
     connection = await asyncpg.connect(
         user=os.getenv('DB_USERNAME'),
@@ -33,7 +34,6 @@ async def add_likes(user_id, num_likes):
 
 
 async def add_dislikes(user_id, num_dislikes):
-    
     # Connect to Database
     connection = await asyncpg.connect(
         user=os.getenv('DB_USERNAME'),
@@ -54,6 +54,7 @@ async def add_dislikes(user_id, num_dislikes):
             dislikes = dislikes_table['dislikes']
             updated_dislikes = dislikes + num_dislikes
             await connection.execute(f'UPDATE clout_data SET dislikes={updated_dislikes} WHERE user_id={user_id};')
+            print('everything words')
 
     finally:
         await connection.close()
@@ -111,7 +112,7 @@ async def add_sniped(user_id, num_sniped):
         await connection.close()
 
 
-async def cloutbot_fetch_all_db_data():
+async def fetch_all_cloutbot_data():
     # Connect to Database
     connection = await asyncpg.connect(
         user=os.getenv('DB_USERNAME'),
@@ -125,5 +126,130 @@ async def cloutbot_fetch_all_db_data():
         db_table = await connection.fetch(f'SELECT * FROM clout_data;')
         return db_table
     
+    finally:
+        await connection.close()
+
+
+# --== ThugginBot Data ==--
+async def fetch_all_thugginbot_words():
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        db_table = await connection.fetch(f'SELECT * FROM thugginbot_words;')
+        return db_table
+    
+    finally:
+        await connection.close()
+
+
+async def check_fetch_thugginbot_word(current_word):
+
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        db_table = await connection.fetch(f'SELECT * FROM words WHERE word={current_word};')
+        return db_table
+    
+    finally:
+        await connection.close()
+
+
+async def add_thugginbot_word(word, img_url):
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        await connection.execute(f'INSERT INTO thugginbot_words VALUES ({word}, {img_url});')
+
+    finally:
+        await connection.close()
+
+
+async def delete_thugginbot_word(word_to_delete):
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        await connection.execute(f'DELETE FROM thugginbot_words WHERE word={word_to_delete};')
+
+    finally:
+        await connection.close()
+
+
+async def add_suggest_thugginbot_word(word, img_url):
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        await connection.execute(f'INSERT INTO new_suggest_words VALUES ({word}, {img_url});')
+
+    finally:
+        await connection.close()
+
+
+async def fetch_suggest_thugginbot_word():
+        
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        await connection.fetch(f'SELECT * FROM new_suggest_words;')
+
+    finally:
+        await connection.close()
+
+
+async def delete_suggest_thugginbot_word(word_to_delete):
+
+    # Connect to Database
+    connection = await asyncpg.connect(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+    try:
+        await connection.execute(f'DELETE FROM new_suggest_words WHERE word={word_to_delete};')
+
     finally:
         await connection.close()
