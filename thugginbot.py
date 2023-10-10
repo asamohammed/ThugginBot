@@ -37,5 +37,5 @@ async def handle_thugginbot_message(msg):
             
             # Clear current word and the print list
             current_word = ''
-            current_word_print_list.clear()
+            # current_word_print_list.clear()
             break
