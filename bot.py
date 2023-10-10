@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initalize bot
-bot = discord.Client(intents = discord.Intents.all())
+intents = discord.Intents.all() # discord.Intents.all()
+intents.messages = True
+bot = discord.Client(intents = intents)
 
 
 # Bot Login Confirmation
@@ -19,6 +21,9 @@ async def on_ready():
 # Message Handling
 @bot.event
 async def on_message(msg):
+
+    # TODO: check for the thursday thugginmessage not sent
+
     # Ignore Bot messages 
     if msg.author == bot.user:
         return
