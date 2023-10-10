@@ -4,7 +4,7 @@ from dbmanager import check_fetch_thugginbot_word
 # People mess up the thugginword so thould be pluggin in hard code
 
 async def handle_thugginbot_message(msg):
-    message_history_limit = 20
+    message_history_limit = 16
 
     current_word = ''
     # current_word_print_list = []
