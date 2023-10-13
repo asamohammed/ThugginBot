@@ -64,8 +64,11 @@ async def post_like_leaderboard(msg):
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['likes']}.\n"
                     break
+                elif member.global_name:
+                    message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
+                    break
                 else:
-                    message += f"{row_index}: {member.global_name} with {row['likes']}.\n"
+                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
                     break
 
     # Send message 
@@ -91,8 +94,11 @@ async def post_dislike_leaderboard(msg):
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['dislikes']}.\n"
                     break
+                elif member.global_name:
+                    message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
+                    break
                 else:
-                    message += f"{row_index}: {member.global_name} with {row['dislikes']}.\n"
+                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
                     break
 
     # Send message 
@@ -118,8 +124,11 @@ async def post_clout_leaderboard(msg):
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['likes'] - row['dislikes']}.\n"
                     break
-                else:
+                elif member.global_name:
                     message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
+                    break
+                else:
+                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
                     break
 
     # Send message 
