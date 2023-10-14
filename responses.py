@@ -64,9 +64,6 @@ async def post_like_leaderboard(msg):
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['likes']}.\n"
                     break
-                elif member.global_name:
-                    message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
-                    break
                 else:
                     message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
                     break
@@ -94,9 +91,6 @@ async def post_dislike_leaderboard(msg):
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['dislikes']}.\n"
                     break
-                elif member.global_name:
-                    message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
-                    break
                 else:
                     message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
                     break
@@ -123,9 +117,6 @@ async def post_clout_leaderboard(msg):
                     pass
                 elif member.nick:  # Check if they have a server nickname
                     message += f"{row_index}: {member.nick} with {row['likes'] - row['dislikes']}.\n"
-                    break
-                elif member.global_name:
-                    message += f"{row_index}: {member.global_name} with {row['likes'] - row['dislikes']}.\n"
                     break
                 else:
                     message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
@@ -157,7 +148,7 @@ async def post_kills_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['kills']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member.global_name} with {row['kills']}.\n"
+                    message += f"{row_index}: {member} with {row['kills']}.\n"
                     break
 
     # Send message 
@@ -184,7 +175,7 @@ async def post_sniped_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['sniped']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member.global_name} with {row['sniped']}.\n"
+                    message += f"{row_index}: {member} with {row['sniped']}.\n"
                     break
 
     # Send message 
