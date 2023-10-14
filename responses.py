@@ -65,7 +65,7 @@ async def post_like_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['likes']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
+                    message += f"{row_index}: {member} with {row['likes']}.\n"
                     break
 
     # Send message 
@@ -92,7 +92,7 @@ async def post_dislike_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['dislikes']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
+                    message += f"{row_index}: {member} with {row['dislikes']}.\n"
                     break
 
     # Send message 
