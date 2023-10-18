@@ -79,14 +79,12 @@ async def process_msg(msg):
     # --== Sniped Commands ==--
     elif text.startswith('!sniped '):
         if msg.author.id == msg.mentions[0].id:
-            await msg.channel.send('*STOOPID, I\'M NOT GONNA LET YOU GET THE CHANCE*')
-        elif not msg.mentions:
-            return
-        elif not msg.attachments:
-            return
-        elif msg.author.id == msg.mentions[0].id:
             await msg.channel.send('Friendly Fire Warning')
             return
+        elif not msg.mentions:
+            await msg.channel.send("*STOOPID, DIDN\'T TAG \'EM*")
+        elif not msg.attachments:
+            await msg.channel.send('*OKAY SO LIKE NO PIC???*')
         elif bool(msg.mentions[0].bot):
             await msg.channel.send('**LEAVE US ALONE!!!** 😡')
             return
