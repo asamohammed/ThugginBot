@@ -38,7 +38,7 @@ async def process_msg(msg):
         elif not msg.mentions:
             return
         elif bool(msg.mentions[0].bot):
-            await msg.channel.send('**LEAVE US ALONE!!!** 😡')
+            await msg.channel.send("**UHH... DON\'T CARE!!!** 😡")
         else:
             # Get first mention in list
             target_user = msg.mentions[0].id
