@@ -5,6 +5,27 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # TODO: Create a db pool and then just connect
+"""
+import asyncpg
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+async def create_database_pool():
+    return await asyncpg.create_pool(
+        user=os.getenv('DB_USERNAME'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=os.getenv('DB_PORT')
+    )
+
+# Usage in other functions
+async def some_database_operation():
+    async with create_database_pool().acquire() as connection:
+        # Perform database operations using the 'connection' object
+"""
 # TODO: make sure the suggest function ignores no img calls
 
 # --== CloutBot Data ==--
@@ -55,7 +76,6 @@ async def add_dislikes(user_id, num_dislikes):
             dislikes = dislikes_table['dislikes']
             updated_dislikes = dislikes + num_dislikes
             await connection.execute(f'UPDATE clout_data SET dislikes={updated_dislikes} WHERE user_id={user_id};')
-            print('everything words')
 
     finally:
         await connection.close()
