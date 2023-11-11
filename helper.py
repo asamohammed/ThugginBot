@@ -17,6 +17,16 @@ async def process_msg(msg):
 
         print('POST - HelpCommand')
     
+    elif text.startswith('!haze '):
+        if not msg.mentions:
+            pass
+        elif msg.mentions[0].nick == 'Sean':
+            await msg.channel.send('🥏HAAAA GET HAZED **Sean**')
+        else:
+            await  msg.channel.send('Sorry I can only haze Mr. Prezo')
+
+        print('POST - Haze')
+
     elif text.startswith('!tomatoes '):
         if msg.author.id == msg.mentions[0].id:
             await msg.channel.send("*STOOPID, I'M NOT GONNA LET YOU GET THE CHANCE*")
