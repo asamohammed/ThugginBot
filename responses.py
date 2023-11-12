@@ -4,7 +4,7 @@ import dbmanager
 
 # --== General Commands ==--
 async def post_help_command(msg):
-    message = "**--- __Commands:__ ---**\n**!sawthat** Send saw that meme.\n**!tomatoes @user** Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
+    message = "**--- __Commands:__ ---**\n**!sawthat** Send saw that meme.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
     await msg.channel.send(message)
 
 async def post_tomatos_command(msg):
