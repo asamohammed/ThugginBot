@@ -91,13 +91,11 @@ async def process_msg(msg):
         if msg.author.id == msg.mentions[0].id:
             await msg.channel.send('Friendly Fire Warning')
             return
-        elif not msg.mentions:
-            await msg.channel.send("*STOOPID, DIDN\'T TAG \'EM*")
-        elif not msg.attachments:
-            await msg.channel.send('*OKAY SO LIKE NO PIC???*')
         elif bool(msg.mentions[0].bot):
             await msg.channel.send('**LEAVE US ALONE!!!** 😡')
             return
+        elif not msg.mentions:
+            await msg.channel.send("*STOoOoPID, DIDN\'T TAG \'EM*")
         else:
             for target_user in msg.mentions:
                 await dbmanager.add_sniped(target_user.id, 1)
