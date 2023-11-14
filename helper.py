@@ -23,7 +23,15 @@ async def process_msg(msg):
         elif msg.mentions[0].nick == 'Sean':
             await msg.channel.send('🥏HAAAA GET HAZED **Sean**')
         else:
-            await  msg.channel.send('Sorry I can only haze Mr. Prezo')
+            await msg.channel.send('Sorry I can only haze Mr. Prezo')
+
+        print('POST - Haze')
+
+    elif text.startswith('!love '):
+        if not msg.mentions:
+            pass
+        else:
+            await responses.post_love_command(msg)
 
         print('POST - Haze')
 

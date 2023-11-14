@@ -39,6 +39,23 @@ async def post_tomatos_command(msg):
             message = f'BOOOO!!!!! 👎👎 BOOOOOO! 🍅🍅🥫🍅🍅🍅 --> **{target_user}**'
             await msg.channel.send(message)
 
+async def post_love_command(msg):
+    if not msg.mentions:
+        return
+    elif bool(msg.mentions[0].bot):
+        await msg.channel.send('**LEAVE US ALONE!!!** 😡')
+
+    else:
+        # Get first mention in list
+        if msg.mentions[0].nick:
+            target_user = msg.mentions[0].nick
+        else:
+            target_user = msg.mentions[0]
+
+        # Send love message 
+        message = f'❤️❤️😻🫶🥰🥰 **{target_user}** 🥰🥰🫶😻❤️❤️'
+        await msg.channel.send(message)
+
 async def post_sawthat(msg):
     message = 'https://cdn.discordapp.com/attachments/1151212102292353104/1160671112150134835/IMG_2100.JPG?ex=65358235&is=65230d35&hm=62829a9020e54110005b8593642263bde80732505a99aaff0e516fb1f35cd86e&'
     await msg.channel.send(message)
