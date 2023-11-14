@@ -63,7 +63,7 @@ async def post_haze_command(msg):
         await msg.channel.send('**LEAVE US ALONE!!!** 😡')
     elif msg.author.id == msg.mentions[0].id:
         await msg.channel.send("**WHYYY?????**")
-    elif not msg.author.id == 'seano32204':
+    elif not msg.author == 'seano32204':
         await msg.channel.send("Presidential Power: DENIED")
 
     else:
