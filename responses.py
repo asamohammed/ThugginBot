@@ -4,7 +4,7 @@ import dbmanager
 
 # --== General Commands ==--
 async def post_help_command(msg):
-    message = "**--- __Commands:__ ---**\n**!sawthat** Send saw that meme.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
+    message = "**--- __Commands:__ ---**\n**!sawthat** Send saw that meme.\n**!love** @user.**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
     await msg.channel.send(message)
 
 async def post_tomatos_command(msg):
@@ -16,7 +16,7 @@ async def post_tomatos_command(msg):
     else:
         # Get first mention in list
         if msg.mentions[0].nick:
-            target_user = msg.mentions[0].nick
+            target_user = msg.mentions[0].display_name
         else:
             target_user = msg.mentions[0]
         
@@ -48,9 +48,9 @@ async def post_love_command(msg):
     else:
         # Get first mention in list
         if msg.mentions[0].nick:
-            target_user = msg.mentions[0].nick
+            target_user = msg.mentions[0].display_name
         else:
-            target_user = msg.mentions[0]
+            target_user = msg.mentions[0].display_name
 
         # Send love message 
         message = f'❤️❤️😻🫶🥰🥰 **{target_user}** 🥰🥰🫶😻❤️❤️'
@@ -71,7 +71,7 @@ async def post_haze_command(msg):
         if msg.mentions[0].nick:
             target_user = msg.mentions[0].nick
         else:
-            target_user = msg.mentions[0]
+            target_user = msg.mentions[0].display_name
     
         message = f'🥏HAAA GET HAZED **{target_user}**'
         await msg.channel.send(message)
@@ -102,7 +102,7 @@ async def post_like_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['likes']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['likes']}.\n"
+                    message += f"{row_index}: {member.display_name} with {row['likes']}.\n"
                     break
 
     # Send message 
@@ -129,7 +129,7 @@ async def post_dislike_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['dislikes']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['dislikes']}.\n"
+                    message += f"{row_index}: {member.display_name} with {row['dislikes']}.\n"
                     break
 
     # Send message 
@@ -156,7 +156,7 @@ async def post_clout_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['likes'] - row['dislikes']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['likes'] - row['dislikes']}.\n"
+                    message += f"{row_index}: {member.display_name} with {row['likes'] - row['dislikes']}.\n"
                     break
 
     # Send message 
@@ -185,7 +185,7 @@ async def post_kills_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['kills']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['kills']}.\n"
+                    message += f"{row_index}: {member.display_name} with {row['kills']}.\n"
                     break
 
     # Send message 
@@ -212,7 +212,7 @@ async def post_sniped_leaderboard(msg):
                     message += f"{row_index}: {member.nick} with {row['sniped']}.\n"
                     break
                 else:
-                    message += f"{row_index}: {member} with {row['sniped']}.\n"
+                    message += f"{row_index}: {member.display_name} with {row['sniped']}.\n"
                     break
 
     # Send message 
