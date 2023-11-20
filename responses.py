@@ -48,7 +48,7 @@ async def post_love_command(msg):
     else:
         # Get first mention in list
         if msg.mentions[0].nick:
-            target_user = msg.mentions[0].display_name
+            target_user = msg.mentions[0].nick
         else:
             target_user = msg.mentions[0].display_name
 
