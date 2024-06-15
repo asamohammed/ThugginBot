@@ -5,10 +5,13 @@ import thugginbot
 async def process_msg(msg):
     # Get message text
     text = msg.content.lower()
+    upper=text.upper()
 
+    if text[0]=='!' and   dbmanager.check_fetch_thugginbot_word(upper)!=False:
+        thugginbot.checkThugginBotCommand(text)
     # --== ThugginBot Commands ==--
-    if len(text) == 1:
-        await thugginbot.handle_thugginbot_message(msg)
+    elif len(text) == 1:
+       await thugginbot.handle_thugginbot_message(msg)
 
 
     # --== General Commands ==--

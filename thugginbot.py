@@ -39,3 +39,10 @@ async def handle_thugginbot_message(msg):
             current_word = ''
             # current_word_print_list.clear()
             break
+
+async def checkThugginBotCommand(msg):
+    msg=msg.upper()
+    fetchedRow= await check_fetch_thugginbot_word(msg)
+    if len(fetchedRow)==1:
+        if fetchedRow[0]['img_url']:
+            await msg.channel.send(fetchedRow[0]['img_url'])
