@@ -2,14 +2,28 @@ import responses
 import dbmanager
 import thugginbot
 
+CurentWords= {"lovers":1, "aarg":1,"fur":1,"margs":1,"patg":1,"prom":1,"shopping":1,"spoon":1,"after":1,"arriba":1,"behold":1,"gac":1,"brothers":1,"girlypop":1,"goyank":1,"hbd":1,"mykid":1,"napscanthang":1,"rizz":1,"spoopy":1,"teampee":1,"watg":1,"zaza":1,"drunktype":1,"fortnite":1,"fuckit":1,"gobills":1,"hottub":1,"juice":1,"naked":1,"operator":1,"showerbeer":1,"souptime":1,"egg":1,"hatg":1,"chef":1,"blue":1,"munch":1,"thief":1,"besties":1,"hotsauce":1,"caillou":1,"sleepy":1,"sus":1,"fearless":1,"eep":1,"ready":1,"farmer":1,"palmtree":1,"eatg":1,"teli":1}
+
+#Gifs are not implemnted yet this is just a place holder
+CurrentGifs={"drop":"https://imgur.com/a/HWIOTwz","deck":"https://imgur.com/vjb9mxE","twerk":"https://imgur.com/l0kFAUA"}
+
+
 async def process_msg(msg):
     # Get message text
     text = msg.content.lower()
-    upper=text.upper()
-
-    if text[0]=='!' and   dbmanager.check_fetch_thugginbot_word(upper)!=False:
-        thugginbot.checkThugginBotCommand(text)
+    
+    
+    length=len(text)  
     # --== ThugginBot Commands ==--
+    if text[0]=='!' and   text[1:length] in CurentWords.keys():
+        text=text[1:length]
+        await thugginbot.checkThugginBotCommand(msg)
+
+    #Command to send Gifs
+    elif text[0]=='!' and   text[1:length] in CurrentGifs.keys():
+        text=text[1:length]
+        await msg.channel.send(CurrentGifs.get(text))
+    # --== ThugginThursday Command ==--
     elif len(text) == 1:
        await thugginbot.handle_thugginbot_message(msg)
 

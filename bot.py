@@ -4,6 +4,7 @@ import helper
 from keep_alive import keep_alive
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 # Initalize bot
@@ -38,3 +39,4 @@ async def on_message(msg):
 
 # Run bot
 bot.run(os.getenv('BOT_TOKEN'))
+#bot.run(testBotToken)
