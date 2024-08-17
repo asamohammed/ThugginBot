@@ -39,4 +39,4 @@ async def on_message(msg):
 
 # Run bot
 bot.run(os.getenv('BOT_TOKEN'))
-#bot.run(testBotToken)
+

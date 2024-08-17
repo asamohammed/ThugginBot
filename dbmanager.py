@@ -1,6 +1,10 @@
 import os
 import asyncpg
 from dotenv import load_dotenv
+import json
+import helper
+from csv import writer 
+
 
 load_dotenv()
 
@@ -183,6 +187,19 @@ async def add_thugginbot_word(word, img_url):
     try:
         # if img_url == 'no-img-input':
         await connection.execute(f"INSERT INTO thugginbot_words VALUES ('{word}', '{img_url}');")
+        with open("words.json","r") as f:
+            data=json.load(f)
+        temp={word:img_url} #need to add a way to upload img to imigur and get link through api
+        data.update(temp)
+        NewRow=[word,0.0]
+        with open('TimesUsed.csv','a') as U:
+            WrittenObject=writer(U)
+            WrittenObject.writerow(NewRow)
+            U.close
+        helper.UpdateCurrentWords()
+        #adds the new word to the csv file 
+        
+
         # else:
         #     await connection.execute(f"INSERT INTO thugginbot_words (word) VALUES ('{word}');")
 
@@ -204,6 +221,10 @@ async def delete_thugginbot_word(word_to_delete):
 
     try:
         await connection.execute(f"DELETE FROM thugginbot_words WHERE word='{word_to_delete}';")
+        jsonObject=json.dumps(helper.CurentWords)
+        with open('words.json','w') as allWords:
+            allWords.write(jsonObject)
+            await helper.UpdateCurrentWords()
 
     finally:
         await connection.close()

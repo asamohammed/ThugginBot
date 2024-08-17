@@ -1,15 +1,28 @@
 import responses
 import dbmanager
 import thugginbot
+import json
+import datetime
+import random
+import csv
+import pandas as pd
+from collections import OrderedDict
+import numpy as np
 
-CurentWords= {"lovers":1, "aarg":1,"fur":1,"margs":1,"patg":1,"prom":1,"shopping":1,"spoon":1,"after":1,"arriba":1,"behold":1,"gac":1,"brothers":1,"girlypop":1,"goyank":1,"hbd":1,"mykid":1,"napscanthang":1,"rizz":1,"spoopy":1,"teampee":1,"watg":1,"zaza":1,"drunktype":1,"fortnite":1,"fuckit":1,"gobills":1,"hottub":1,"juice":1,"naked":1,"operator":1,"showerbeer":1,"souptime":1,"egg":1,"hatg":1,"chef":1,"blue":1,"munch":1,"thief":1,"besties":1,"hotsauce":1,"caillou":1,"sleepy":1,"sus":1,"fearless":1,"eep":1,"ready":1,"farmer":1,"palmtree":1,"eatg":1,"teli":1}
+df=pd.read_csv("TimesUsed.csv")
 
+
+with open("words.json","r") as f:
+    CurentWords=json.load(f)
 #Gifs are not implemnted yet this is just a place holder
-CurrentGifs={"drop":"https://imgur.com/a/HWIOTwz","deck":"https://imgur.com/vjb9mxE","twerk":"https://imgur.com/l0kFAUA"}
+#CurrentGifs={"drop":"https://imgur.com/a/HWIOTwz","deck":"https://imgur.com/vjb9mxE","twerk":"https://imgur.com/l0kFAUA"}
 
+async def UpdateCurrentWords():
+    CurentWords=json.load(f)
 
 async def process_msg(msg):
     # Get message text
+
     text = msg.content.lower()
     
     
@@ -17,23 +30,75 @@ async def process_msg(msg):
     # --== ThugginBot Commands ==--
     if text[0]=='!' and   text[1:length] in CurentWords.keys():
         text=text[1:length]
-        await thugginbot.checkThugginBotCommand(msg)
+        #await thugginbot.checkThugginBotCommand(msg)
+        await msg.channel.send(CurentWords[text])
+        BotWord=''
+        for letter in text:
+            UpLetter=letter.upper()
+            BotWord=BotWord+UpLetter
+            BotWord=BotWord+' '
+        await msg.channel.send(BotWord)
+        Tempmsg=msg.content.lower()[1:len(msg.content)]
+        mask = df['Word'] == Tempmsg
+        result = df[df['Word'] == Tempmsg]
+        temp=result['TimesUsed'].values[0]
+        print(temp)
+        print(Tempmsg)
+        temp=temp+1
+        df.loc[mask, 'TimesUsed'] = temp
+        df.to_csv("TimesUsed.csv", index=False)
+
 
     #Command to send Gifs
-    elif text[0]=='!' and   text[1:length] in CurrentGifs.keys():
-        text=text[1:length]
-        await msg.channel.send(CurrentGifs.get(text))
+    #elif text[0]=='!' and   text[1:length] in CurrentGifs.keys():
+    #    text=text[1:length]
+    #    await msg.channel.send(CurrentGifs.get(text))
     # --== ThugginThursday Command ==--
-    elif len(text) == 1:
+    elif len(text) == 1 and datetime.date.today().weekday()==3:
        await thugginbot.handle_thugginbot_message(msg)
 
 
     # --== General Commands ==--
+    elif text.startswith('!random'):
+        Keys=list(CurentWords.keys())
+        RandomWord=random.randint(0,len(Keys)-1)
+        Word=Keys[RandomWord]
+        Img=Word
+        await msg.channel.send(CurentWords[Word])
+        BotWord=''
+        for letter in Word:
+            BotWord=BotWord+letter.upper()
+            BotWord=BotWord+' '
+        await msg.channel.send(BotWord)
+
     elif text.startswith('!help'):
         await responses.post_help_command(msg)
 
         print('POST - HelpCommand')
-    
+    elif(text.startswith('!mostused')):
+
+        #data=pd.read_csv("TimesUsed.csv")
+        #dataDict=data.to_dict(orient='records')
+        #print(dataDict)
+        TimesUsedDict={}
+        with open('TimesUsed.csv', 'r', newline='') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            #csv_reader=next(csv_reader)
+            for row in csv_reader:
+                Word=row['Word']
+                TimesUsed=float(row['TimesUsed'])
+                TimesUsedDict[Word]=TimesUsed
+        #print(TimesUsedDict)
+            
+        keys = list(TimesUsedDict.keys())
+        values = list(TimesUsedDict.values())
+        sorted_value_index = np.argsort(values)
+        sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
+        sorted_dict=dict(reversed(list(sorted_dict.items())))
+
+        ListOfWords=list(sorted_dict)
+        message='**1:** ' + str(ListOfWords[0]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[0]])) + '\n**2:** ' + str(ListOfWords[1]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[1]])) +'\n**3:** ' + str(ListOfWords[2]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[2]])) +'\n**4:** ' + str(ListOfWords[3]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[3]])) +'\n**5:** ' + str(ListOfWords[4]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[4]]))
+        await msg.channel.send(message)
     elif text.startswith('!haze '):
         if not msg.mentions:
             pass
