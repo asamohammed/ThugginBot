@@ -64,8 +64,8 @@ async def process_msg(msg):
         RandomWord=random.randint(0,len(Keys)-1)
         Word=Keys[RandomWord]
         Img=Word
-        if(Img=='patg'):
-            while Img=='patg':
+        if(Img=='patg' or Img=='hbd'):
+            while Img=='patg' or Img=='hbd':
                 RandomWord=random.randint(0,len(Keys)-1)
                 Word=Keys[RandomWord]
                 Img=Word
