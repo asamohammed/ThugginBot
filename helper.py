@@ -64,12 +64,25 @@ async def process_msg(msg):
         RandomWord=random.randint(0,len(Keys)-1)
         Word=Keys[RandomWord]
         Img=Word
+        if(Img=='patg'):
+            while Img=='patg':
+                RandomWord=random.randint(0,len(Keys)-1)
+                Word=Keys[RandomWord]
+                Img=Word
+
         await msg.channel.send(CurentWords[Word])
         BotWord=''
         for letter in Word:
             BotWord=BotWord+letter.upper()
             BotWord=BotWord+' '
         await msg.channel.send(BotWord)
+        Word=Word.lower()
+        mask = df['Word'] == Word
+        result = df[df['Word'] == Word]
+        temp=result['TimesUsed'].values[0]
+        temp=temp+1
+        df.loc[mask, 'TimesUsed'] = temp
+        df.to_csv("TimesUsed.csv", index=False)
 
     elif text.startswith('!help'):
         await responses.post_help_command(msg)
