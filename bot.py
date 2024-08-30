@@ -38,5 +38,8 @@ async def on_message(msg):
 # keep_alive()
 
 # Run bot
-bot.run(os.getenv('BOT_TOKEN'))
-#bot.run(testBotToken)
+#bot.run(os.getenv('BOT_TOKEN'))
+token = os.getenv('BOT_TOKEN')
+#print(token)
+bot.run(token)
+

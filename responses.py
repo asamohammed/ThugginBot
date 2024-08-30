@@ -1,11 +1,14 @@
 
-from random import randint
+import random
 import dbmanager
+import helper
+import random
 
 
 # --== General Commands ==--
+
 async def post_help_command(msg):
-    message = "**--- __Commands:__ ---**\n**!(thuginBotWord)** Send that commands picture.\n**!sawthat** Send saw that meme.\n**!love** @user.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!help** - See all of CloutBot\'s commands."
+    message = "**--- __Commands:__ ---**\n**!(thuginBotWord)** Send that words picture.\n**!random** Send a random thugginBot Word.\n**!sawthat** Send saw that meme.\n**!love** @user.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!mostused** Sends the 5 most used thugginBot Words\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!kda** - Sends your KDA\n**!kdaleaderboard** - See 10 highest KDAs\n**!help** - See all of CloutBot\'s commands."
     await msg.channel.send(message)
 
 async def post_tomatos_command(msg):
@@ -22,7 +25,7 @@ async def post_tomatos_command(msg):
             target_user = msg.mentions[0]
         
         # 1 in 20 chance of sending "this guy sticks" message instead
-        random_num = randint(1, 20)
+        random_num = random.randint(1, 20)
 
         # Send "this guy stinks"
         if random_num == 20:
@@ -44,6 +47,23 @@ async def post_sawthat(msg):
     message = 'https://cdn.discordapp.com/attachments/1151212102292353104/1160671112150134835/IMG_2100.JPG?ex=65358235&is=65230d35&hm=62829a9020e54110005b8593642263bde80732505a99aaff0e516fb1f35cd86e&'
     await msg.channel.send(message)
     
+
+async def post_love_command(msg):
+    if not msg.mentions:
+        return
+    elif bool(msg.mentions[0].bot):
+        await msg.channel.send('**LEAVE US ALONE!!!** 😡')
+
+    else:
+        # Get first mention in list
+        if msg.mentions[0].nick:
+            target_user = msg.mentions[0].nick
+        else:
+            target_user = msg.mentions[0].display_name
+
+        # Send love message 
+        message = f'❤️❤️😻🫶🥰🥰 **{target_user}** 🥰🥰🫶😻❤️❤️'
+        await msg.channel.send(message)
 # --== Like/Dislike Commands ==--
 async def post_like_leaderboard(msg):
 
@@ -53,7 +73,7 @@ async def post_like_leaderboard(msg):
     # Sort Data
     fetched_rows.sort(key=lambda x: x['likes'], reverse=True)
     message = '-__**Like Leaderboard**__-\n'
-
+    
     max_users_to_show = 10
 
     # Loop through the list of database records
@@ -181,4 +201,24 @@ async def post_sniped_leaderboard(msg):
 
     # Send message 
     await msg.channel.send(message)
+
+async def post_haze_command(msg):
+    if not msg.mentions:
+        return
+    elif bool(msg.mentions[0].bot):
+        await msg.channel.send('**LEAVE US ALONE!!!** 😡')
+    elif msg.author.id == msg.mentions[0].id:
+        await msg.channel.send("**WHYYY?????**")
+    elif not msg.author.nick=='napasaurus':
+        await msg.channel.send("Presidential Power: DENIED")
+
+    else:
+        # Get first mention in list
+        if msg.mentions[0].nick:
+            target_user = msg.mentions[0].nick
+        else:
+            target_user = msg.mentions[0].display_name
+    
+        message = f'🥏HAAA GET HAZED **{target_user}**'
+        await msg.channel.send(message)
     

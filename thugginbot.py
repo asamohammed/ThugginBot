@@ -1,6 +1,9 @@
-from dbmanager import check_fetch_thugginbot_word
+import dbmanager
 import datetime
+import csv
+import pandas as pd
 
+df=pd.read_csv("TimesUsed.csv")
 # check for 3 consequitigve before sending the word.
 # People mess up the thugginword so thould be pluggin in hard code
 
@@ -16,24 +19,16 @@ async def handle_thugginbot_message(msg):
         today=datetime.date.today()
         dayOfWeek=today.weekday()
         #print(dayOfWeek)
-        if len(text) == 1 and text.isalpha() and dayOfWeek==3 :
+        if len(text) == 1 and text.isalpha() and dayOfWeek==3 : #3 is thursday 
             text = text.upper()
             current_word = text + current_word
+            print(current_word)
             # current_word_print_list.append(current_word)
 
             # Words can't be less that 3 char, no need to use db resources
             #only calls the db if the  word is thuggin thursday
             if current_word=='THUGGINTHURSDAY':
-                fetched_row = await check_fetch_thugginbot_word(current_word)
-
-                if len(fetched_row) == 1:
-                    if fetched_row[0]['img_url']:
-                        await msg.channel.send(fetched_row[0]['img_url'])
-
-                    spaced_current_word = current_word.replace("", " ")[1: -1]
-                    await msg.channel.send(spaced_current_word)
-                    
-                    break
+                await msg.channel.send("T H U G G I N T H U R S D A Y")
                 
         else:
             #print("bye")
@@ -49,7 +44,17 @@ async def handle_thugginbot_message(msg):
 async def checkThugginBotCommand(msg):
     curMsg=msg.content.upper()[1:len(msg.content)]
 
-    fetchedRow= await check_fetch_thugginbot_word(curMsg)
+    fetchedRow= await dbmanager.check_fetch_thugginbot_word(curMsg)
+    Tempmsg=msg.content.lower()[1:len(msg.content)]
+    mask = df['Word'] == Tempmsg
+    result = df[df['Word'] == Tempmsg]
+    temp=result['TimesUsed'].values[0]
+    print(temp)
+    print(Tempmsg)
+    temp=temp+1
+    df.loc[mask, 'TimesUsed'] = temp
+    df.to_csv("TimesUsed.csv", index=False)
     if len(fetchedRow)==1:
         if fetchedRow[0]['img_url']:
             await msg.channel.send(fetchedRow[0]['img_url'])
+            
