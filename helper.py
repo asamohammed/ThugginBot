@@ -52,12 +52,34 @@ async def process_msg(msg):
         df.loc[mask, 'TimesUsed'] = temp
         df.to_csv("TimesUsed.csv", index=False)
 
+        #await thugginbot.checkThugginBotCommand(msg)
+        await msg.channel.send(CurentWords[text])
+        BotWord=''
+        for letter in text:
+            UpLetter=letter.upper()
+            BotWord=BotWord+UpLetter
+            BotWord=BotWord+' '
+        await msg.channel.send(BotWord)
+        Tempmsg=msg.content.lower()[1:len(msg.content)]
+        mask = df['Word'] == Tempmsg
+        result = df[df['Word'] == Tempmsg]
+        temp=result['TimesUsed'].values[0]
+        print(temp)
+        print(Tempmsg)
+        temp=temp+1
+        df.loc[mask, 'TimesUsed'] = temp
+        df.to_csv("TimesUsed.csv", index=False)
+
 
     #Command to send Gifs
     #elif text[0]=='!' and   text[1:length] in CurrentGifs.keys():
     #    text=text[1:length]
     #    await msg.channel.send(CurrentGifs.get(text))
+    #elif text[0]=='!' and   text[1:length] in CurrentGifs.keys():
+    #    text=text[1:length]
+    #    await msg.channel.send(CurrentGifs.get(text))
     # --== ThugginThursday Command ==--
+    elif len(text) == 1 and datetime.date.today().weekday()==3:
     elif len(text) == 1 and datetime.date.today().weekday()==3:
        await thugginbot.handle_thugginbot_message(msg)
 
@@ -93,6 +115,30 @@ async def process_msg(msg):
         await responses.post_help_command(msg)
 
         print('POST - HelpCommand')
+    elif(text.startswith('!mostused')):
+
+        #data=pd.read_csv("TimesUsed.csv")
+        #dataDict=data.to_dict(orient='records')
+        #print(dataDict)
+        TimesUsedDict={}
+        with open('TimesUsed.csv', 'r', newline='') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            #csv_reader=next(csv_reader)
+            for row in csv_reader:
+                Word=row['Word']
+                TimesUsed=float(row['TimesUsed'])
+                TimesUsedDict[Word]=TimesUsed
+        #print(TimesUsedDict)
+            
+        keys = list(TimesUsedDict.keys())
+        values = list(TimesUsedDict.values())
+        sorted_value_index = np.argsort(values)
+        sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
+        sorted_dict=dict(reversed(list(sorted_dict.items())))
+
+        ListOfWords=list(sorted_dict)
+        message='**1:** ' + str(ListOfWords[0]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[0]])) + '\n**2:** ' + str(ListOfWords[1]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[1]])) +'\n**3:** ' + str(ListOfWords[2]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[2]])) +'\n**4:** ' + str(ListOfWords[3]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[3]])) +'\n**5:** ' + str(ListOfWords[4]).upper() + ' at ' + str(int(sorted_dict[ListOfWords[4]]))
+        await msg.channel.send(message)
     elif(text.startswith('!mostused')):
 
         #data=pd.read_csv("TimesUsed.csv")

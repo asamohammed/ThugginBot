@@ -1,11 +1,13 @@
 
 import random
+import random
 import dbmanager
 import helper
 import random
 
 
 # --== General Commands ==--
+
 
 async def post_help_command(msg):
     message = "**--- __Commands:__ ---**\n**!(thuginBotWord)** Send that words picture.\n**!random** Send a random thugginBot Word.\n**!sawthat** Send saw that meme.\n**!love** @user.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!mostused** Sends the 5 most used thugginBot Words\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!kda** - Sends your KDA\n**!kdaleaderboard** - See 10 highest KDAs\n**!help** - See all of CloutBot\'s commands."
