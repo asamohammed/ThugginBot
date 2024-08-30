@@ -80,7 +80,6 @@ async def process_msg(msg):
     #    await msg.channel.send(CurrentGifs.get(text))
     # --== ThugginThursday Command ==--
     elif len(text) == 1 and datetime.date.today().weekday()==3:
-    elif len(text) == 1 and datetime.date.today().weekday()==3:
        await thugginbot.handle_thugginbot_message(msg)
 
 
