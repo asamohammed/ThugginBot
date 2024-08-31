@@ -372,7 +372,7 @@ async def process_msg(msg):
         if msg.author == msg.mentions[0]:
             await msg.channel.send('Friendly Fire Warning')
             return
-        #elif bool(msg.mentions[0].bot):
+        elif bool(msg.mentions[0].bot):
             await msg.channel.send('**LEAVE US ALONE!!!** 😡')
             return
         elif not msg.mentions:
