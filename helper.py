@@ -194,10 +194,8 @@ async def process_msg(msg):
 
     # --== Like/Dislike Commands ==--
     elif text.startswith('!like '):
-        if msg.mentions[0].nick:
-            target_user = msg.mentions[0].nick
-        else:
-            target_user = msg.mentions[0]
+
+        target_user = msg.mentions[0]
         df2=pd.read_csv("clout.csv")
         listOfNames= df2['Name'].values #makes a list of all names in the csv file 
         if msg.author.id == msg.mentions[0].id:
@@ -225,10 +223,7 @@ async def process_msg(msg):
         print('ADD - Like')
 
     elif text.startswith('!dislike '):
-        if msg.mentions[0].nick:
-            target_user = msg.mentions[0].nick
-        else:
-            target_user = msg.mentions[0]
+        target_user = msg.mentions[0]
         df2=pd.read_csv("clout.csv")
         listOfNames= df2['Name'].values #makes a list of all names in the csv file 
         if msg.author.id == msg.mentions[0].id:
@@ -264,11 +259,18 @@ async def process_msg(msg):
             csv_reader = csv.DictReader(csv_file)
             #csv_reader=next(csv_reader)
             for row in csv_reader:
+                #print(row)
+                
                 Name=row['Name']
                 Likes=float(row['Likes'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalLikes[Name]=Likes
 
-            
+                
+        print(TotalLikes)    
         keys = list(TotalLikes.keys())
         values = list(TotalLikes.values())
         sorted_value_index = np.argsort(values)
@@ -281,9 +283,10 @@ async def process_msg(msg):
             if(x>=len(ListOfLikes)):
                 break
             else:
+                person=ListOfLikes[x]
                 if(sorted_dict[person]==0):
                     break
-                person=ListOfLikes[x]
+                
                 LikeLeader=LikeLeader+(str(x+1)+': '+person+" with "+ str(sorted_dict[person])+'\n')
         print(ListOfLikes)
         print('POST - Like_leaderboard')
@@ -297,6 +300,10 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Dislikes=float(row['Dislikes'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalDislikes[Name]=Dislikes
 
             
@@ -328,6 +335,10 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Clout=float(row['Clout'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalClout[Name]=Clout
 
             
@@ -355,15 +366,13 @@ async def process_msg(msg):
 
     # --== Sniped Commands ==--
     elif text.startswith('!sniped '):
-        author=msg.author.nick
-        if(author==None):
-            author=msg.author
+        author=msg.author
         df3=pd.read_csv('snipe.csv')
         listOfNames= df3['Name'].values
         if msg.author == msg.mentions[0]:
             await msg.channel.send('Friendly Fire Warning')
             return
-        elif bool(msg.mentions[0].bot):
+        #elif bool(msg.mentions[0].bot):
             await msg.channel.send('**LEAVE US ALONE!!!** 😡')
             return
         elif not msg.mentions:
@@ -417,6 +426,10 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Kills=float(row['Kills'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalKills[Name]=Kills
 
             
@@ -450,6 +463,10 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Deaths=float(row['Deaths'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalDeaths[Name]=Deaths
 
             
@@ -484,6 +501,10 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 KDA=float(row['KDA'])
+                for member in msg.guild.members:
+                    if(str(member.id==Name) and member.nick !=None):
+                        Name=member.nick
+
                 TotalKDA[Name]=KDA
 
             
