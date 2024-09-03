@@ -196,9 +196,10 @@ async def process_msg(msg):
     elif text.startswith('!like '):
 
         target_user = msg.mentions[0]
+        print (target_user)
         df2=pd.read_csv("clout.csv")
         listOfNames= df2['Name'].values #makes a list of all names in the csv file 
-        if msg.author.id == msg.mentions[0].id:
+        if msg.author.id == '7':#msg.mentions[0].id:
             await msg.channel.send('*STOOPID, I\'M NOT GONNA LET YOU GET THE CHANCE*')
         elif not msg.mentions:
             return
@@ -240,7 +241,7 @@ async def process_msg(msg):
                 result = df2[df2['Name'] == str(target_user)] #gets the row with the target user
                 Dislikes=result['Dislikes'].values[0]
                 Clout=result['Clout'].values[0] #gets the vlues
-                Dislikes=Dislikes-1
+                Dislikes=Dislikes+1
                 Clout=Clout-1
                 df2.loc[mask,'Dislikes']=Dislikes
                 df2.loc[mask,'Clout']=Clout #finds locaton of values and updates them
@@ -263,20 +264,22 @@ async def process_msg(msg):
                 
                 Name=row['Name']
                 Likes=float(row['Likes'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
-
                 TotalLikes[Name]=Likes
-
+                #print(TotalLikes)
+                #print(temp)
                 
-        print(TotalLikes)    
+        for member in msg.guild.members:
+            if(str(member) in TotalLikes.keys()):
+                if(member.nick != None):
+                    TotalLikes[str(member.nick)]=TotalLikes[str(member)]
+                    del TotalLikes[str(member)]
+ 
         keys = list(TotalLikes.keys())
         values = list(TotalLikes.values())
         sorted_value_index = np.argsort(values)
         sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
         sorted_dict=dict(reversed(list(sorted_dict.items())))
-        print(sorted_dict)
+        #print(sorted_dict)
         ListOfLikes=list(sorted_dict)
         LikeLeader='-__**Like Leaderboard**__-\n'
         for x in range(0,9):
@@ -288,7 +291,7 @@ async def process_msg(msg):
                     break
                 
                 LikeLeader=LikeLeader+(str(x+1)+': '+person+" with "+ str(sorted_dict[person])+'\n')
-        print(ListOfLikes)
+        #print(ListOfLikes)
         print('POST - Like_leaderboard')
         await msg.channel.send(LikeLeader)
 
@@ -300,13 +303,14 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Dislikes=float(row['Dislikes'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
 
                 TotalDislikes[Name]=Dislikes
-
-            
+        print(TotalDislikes)
+        for member in msg.guild.members:
+            if(str(member) in TotalDislikes.keys()):
+                if(member.nick != None):
+                    TotalDislikes[str(member.nick)]=TotalDislikes[str(member)]
+                    del TotalDislikes[str(member)]        
         keys = list(TotalDislikes.keys())
         values = list(TotalDislikes.values())
         sorted_value_index = np.argsort(values)
@@ -320,6 +324,7 @@ async def process_msg(msg):
                 break
             else:
                 person=ListOfDislikes[x]
+                print(person)
                 if(sorted_dict[person]==0):
                     break
                 DislikeLeader=DislikeLeader+(str(x+1)+': '+person+" with "+ str(sorted_dict[person])+'\n')
@@ -335,13 +340,14 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Clout=float(row['Clout'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
-
+                
                 TotalClout[Name]=Clout
-
-            
+        print(TotalClout)
+        for member in msg.guild.members:
+            if(str(member) in TotalClout.keys()):
+                if(member.nick != None):
+                    TotalClout[str(member.nick)]=TotalClout[str(member)]
+                    del TotalClout[str(member)]    
         keys = list(TotalClout.keys())
         values = list(TotalClout.values())
         sorted_value_index = np.argsort(values)
