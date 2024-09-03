@@ -432,13 +432,15 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Kills=float(row['Kills'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
+
 
                 TotalKills[Name]=Kills
 
-            
+        for member in msg.guild.members:
+            if(str(member) in TotalKills.keys()):
+                if(member.nick != None):
+                    TotalKills[str(member.nick)]=TotalKills[str(member)]
+                    del TotalKills[str(member)]      
         keys = list(TotalKills.keys())
         values = list(TotalKills.values())
         sorted_value_index = np.argsort(values)
@@ -469,13 +471,14 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 Deaths=float(row['Deaths'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
 
                 TotalDeaths[Name]=Deaths
 
-            
+        for member in msg.guild.members:
+            if(str(member) in TotalDeaths.keys()):
+                if(member.nick != None):
+                    TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
+                    del TotalDeaths[str(member)]      
         keys = list(TotalDeaths.keys())
         values = list(TotalDeaths.values())
         sorted_value_index = np.argsort(values)
@@ -507,13 +510,14 @@ async def process_msg(msg):
             for row in csv_reader:
                 Name=row['Name']
                 KDA=float(row['KDA'])
-                for member in msg.guild.members:
-                    if(str(member.id==Name) and member.nick !=None):
-                        Name=member.nick
 
                 TotalKDA[Name]=KDA
 
-            
+        for member in msg.guild.members:
+            if(str(member) in TotalKDA.keys()):
+                if(member.nick != None):
+                    TotalKDA[str(member.nick)]=TotalKDA[str(member)]
+                    del TotalKDA[str(member)]      
         keys = list(TotalKDA.keys())
         values = list(TotalKDA.values())
         sorted_value_index = np.argsort(values)
