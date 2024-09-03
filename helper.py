@@ -199,7 +199,7 @@ async def process_msg(msg):
         print (target_user)
         df2=pd.read_csv("clout.csv")
         listOfNames= df2['Name'].values #makes a list of all names in the csv file 
-        if msg.author.id == '7':#msg.mentions[0].id:
+        if msg.author.id == msg.mentions[0].id:
             await msg.channel.send('*STOOPID, I\'M NOT GONNA LET YOU GET THE CHANCE*')
         elif not msg.mentions:
             return
