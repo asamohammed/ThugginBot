@@ -53,22 +53,7 @@ async def process_msg(msg):
         df.to_csv("TimesUsed.csv", index=False)
 
         #await thugginbot.checkThugginBotCommand(msg)
-        await msg.channel.send(CurentWords[text])
-        BotWord=''
-        for letter in text:
-            UpLetter=letter.upper()
-            BotWord=BotWord+UpLetter
-            BotWord=BotWord+' '
-        await msg.channel.send(BotWord)
-        Tempmsg=msg.content.lower()[1:len(msg.content)]
-        mask = df['Word'] == Tempmsg
-        result = df[df['Word'] == Tempmsg]
-        temp=result['TimesUsed'].values[0]
-        print(temp)
-        print(Tempmsg)
-        temp=temp+1
-        df.loc[mask, 'TimesUsed'] = temp
-        df.to_csv("TimesUsed.csv", index=False)
+        
 
 
     #Command to send Gifs
