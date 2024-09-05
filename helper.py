@@ -481,9 +481,7 @@ async def process_msg(msg):
                 if(member.nick != None):
                     TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
                     del TotalDeaths[str(member)]
-                else:
-                    TotalDeaths[str(member.global_name)]=TotalDeaths[str(member)]
-                    del TotalDeaths[str(member)]
+                
         print(TotalDeaths)
         keys = list(TotalDeaths.keys())
         values = list(TotalDeaths.values())
