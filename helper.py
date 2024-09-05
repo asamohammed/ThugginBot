@@ -248,6 +248,7 @@ async def process_msg(msg):
                 #print(row)
                 
                 Name=row['Name']
+                Name=Name[:-2]
                 Likes=float(row['Likes'])
                 TotalLikes[Name]=Likes
                 #print(TotalLikes)
@@ -290,6 +291,7 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
+                Name=Name[:-2]
                 Dislikes=float(row['Dislikes'])
 
                 TotalDislikes[Name]=Dislikes
@@ -330,6 +332,7 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
+                Name=Name[:-2]
                 Clout=float(row['Clout'])
                 
                 TotalClout[Name]=Clout
@@ -428,6 +431,7 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
+                Name=Name[:-2]
                 Kills=float(row['Kills'])
 
 
@@ -470,6 +474,7 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
+                Name=Name[:-2]
                 Deaths=float(row['Deaths'])
 
                 TotalDeaths[Name]=Deaths
@@ -514,6 +519,7 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
+                Name=Name[:-2]
                 KDA=float(row['KDA'])
 
                 TotalKDA[Name]=KDA
