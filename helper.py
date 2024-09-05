@@ -258,6 +258,9 @@ async def process_msg(msg):
                 if(member.nick != None):
                     TotalLikes[str(member.nick)]=TotalLikes[str(member)]
                     del TotalLikes[str(member)]
+                else:
+                    TotalLikes[str(member.global_name)]=TotalLikes[str(member)]
+                    del TotalLikes[str(member)]
  
         keys = list(TotalLikes.keys())
         values = list(TotalLikes.values())
@@ -295,6 +298,9 @@ async def process_msg(msg):
             if(str(member) in TotalDislikes.keys()):
                 if(member.nick != None):
                     TotalDislikes[str(member.nick)]=TotalDislikes[str(member)]
+                    del TotalDislikes[str(member)]
+                else:
+                    TotalDislikes[str(member.global_name)]=TotalDislikes[str(member)]
                     del TotalDislikes[str(member)]        
         keys = list(TotalDislikes.keys())
         values = list(TotalDislikes.values())
@@ -332,6 +338,9 @@ async def process_msg(msg):
             if(str(member) in TotalClout.keys()):
                 if(member.nick != None):
                     TotalClout[str(member.nick)]=TotalClout[str(member)]
+                    del TotalClout[str(member)]
+                else:
+                    TotalClout[str(member.global_name)]=TotalClout[str(member)]
                     del TotalClout[str(member)]    
         keys = list(TotalClout.keys())
         values = list(TotalClout.values())
@@ -357,6 +366,7 @@ async def process_msg(msg):
 
     # --== Sniped Commands ==--
     elif text.startswith('!sniped '):
+        #print(msg.attachments)
         author=msg.author
         df3=pd.read_csv('snipe.csv')
         listOfNames= df3['Name'].values
@@ -368,6 +378,8 @@ async def process_msg(msg):
             return
         elif not msg.mentions:
             await msg.channel.send("*STOoOoPID, DIDN\'T TAG \'EM*")
+        elif len(msg.attachments)==0:
+            await msg.channel.send('**You Gotta Actually Fire the Shot!!**') 
         else:
             if(str(author) not in listOfNames):
                 newPerson={'Name': str(author),'Kills':0,'Deaths':0,'KDA':0}
@@ -425,6 +437,9 @@ async def process_msg(msg):
             if(str(member) in TotalKills.keys()):
                 if(member.nick != None):
                     TotalKills[str(member.nick)]=TotalKills[str(member)]
+                    del TotalKills[str(member)]
+                else:
+                    TotalKills[str(member.global_name)]=TotalKills[str(member)]
                     del TotalKills[str(member)]      
         keys = list(TotalKills.keys())
         values = list(TotalKills.values())
@@ -461,9 +476,15 @@ async def process_msg(msg):
 
         for member in msg.guild.members:
             if(str(member) in TotalDeaths.keys()):
+                print(member.global_name)
+                print(str(member) +'is '+ str(member.nick))
                 if(member.nick != None):
                     TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
-                    del TotalDeaths[str(member)]      
+                    del TotalDeaths[str(member)]
+                else:
+                    TotalDeaths[str(member.global_name)]=TotalDeaths[str(member)]
+                    del TotalDeaths[str(member)]
+        print(TotalDeaths)
         keys = list(TotalDeaths.keys())
         values = list(TotalDeaths.values())
         sorted_value_index = np.argsort(values)
@@ -502,6 +523,9 @@ async def process_msg(msg):
             if(str(member) in TotalKDA.keys()):
                 if(member.nick != None):
                     TotalKDA[str(member.nick)]=TotalKDA[str(member)]
+                    del TotalKDA[str(member)]
+                else:
+                    TotalKDA[str(member.global_name)]=TotalKDA[str(member)]
                     del TotalKDA[str(member)]      
         keys = list(TotalKDA.keys())
         values = list(TotalKDA.values())
@@ -541,4 +565,25 @@ async def process_msg(msg):
         await msg.channel.send(KDA)
         print('Post KDA')
         return
+    
+async def process_workout(msg):
+    df4=pd.read_csv('workout.csv')
+    author=str(msg.author)
+    listOfNames= df4['Name'].values
+    if len(msg.attachments)==0:
+        return 
+    else:
+        if(author not in listOfNames):
+                newPerson={'Name': author,'Workouts':1}
+                tdf=pd.DataFrame(newPerson,index=[0]) 
+                tdf.to_csv("workout.csv", mode='a', index=False,header=False)
+                df4=pd.read_csv('snipe.csv')
+        else:
+            mask = df4['Name'] == author
+            result = df4[df4['Name'] == author] #gets the row with the target user
+            Workouts=result['Workouts'].values[0]
+            Workouts=Workouts+1
+            df4.loc[mask,'Workouts']=Workouts
+            df4.to_csv("workout.csv", index=False) #updates csv file
+
     

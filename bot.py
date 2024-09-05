@@ -32,6 +32,8 @@ async def on_message(msg):
     # Process main chat
     elif msg.channel.name in ('all-club-chat', 'bot-testing') :
         await helper.process_msg(msg)
+    elif msg.channel.name in ('workouts-and-fitness'):
+        await helper.process_workout(msg)
 
 
 # Keep Bot alive by pinging flask server 
