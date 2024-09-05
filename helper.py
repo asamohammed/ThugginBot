@@ -256,10 +256,7 @@ async def process_msg(msg):
                 
         for member in msg.guild.members:
             if(str(member) in TotalLikes.keys()):
-                if(member.nick != None):
-                    TotalLikes[str(member.nick)]=TotalLikes[str(member)]
-                    del TotalLikes[str(member)]
-                else:
+                if(member.global_name!=None):
                     TotalLikes[str(member.global_name)]=TotalLikes[str(member)]
                     del TotalLikes[str(member)]
  
@@ -298,12 +295,9 @@ async def process_msg(msg):
         print(TotalDislikes)
         for member in msg.guild.members:
             if(str(member) in TotalDislikes.keys()):
-                if(member.nick != None):
-                    TotalDislikes[str(member.nick)]=TotalDislikes[str(member)]
-                    del TotalDislikes[str(member)]
-                else:
+                if(member.global_name!=None):
                     TotalDislikes[str(member.global_name)]=TotalDislikes[str(member)]
-                    del TotalDislikes[str(member)]        
+                    del TotalDislikes[str(member)]       
         keys = list(TotalDislikes.keys())
         values = list(TotalDislikes.values())
         sorted_value_index = np.argsort(values)
@@ -339,10 +333,7 @@ async def process_msg(msg):
         print(TotalClout)
         for member in msg.guild.members:
             if(str(member) in TotalClout.keys()):
-                if(member.nick != None):
-                    TotalClout[str(member.nick)]=TotalClout[str(member)]
-                    del TotalClout[str(member)]
-                else:
+                if(member.global_name!=None):
                     TotalClout[str(member.global_name)]=TotalClout[str(member)]
                     del TotalClout[str(member)]    
         keys = list(TotalClout.keys())
@@ -439,12 +430,9 @@ async def process_msg(msg):
 
         for member in msg.guild.members:
             if(str(member) in TotalKills.keys()):
-                if(member.nick != None):
-                    TotalKills[str(member.nick)]=TotalKills[str(member)]
-                    del TotalKills[str(member)]
-                else:
+                if(member.global_name!=None):
                     TotalKills[str(member.global_name)]=TotalKills[str(member)]
-                    del TotalKills[str(member)]      
+                    del TotalKills[str(member)]     
         keys = list(TotalKills.keys())
         values = list(TotalKills.values())
         sorted_value_index = np.argsort(values)
@@ -485,13 +473,9 @@ async def process_msg(msg):
             #print(TotalDeaths.keys())
             #print(str(member) in TotalDeaths.keys())
             if(str(member) in TotalDeaths.keys()):
-                print("HELLO")
-                if(member.nick != None):
-                    TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
-                    del TotalDeaths[str(member)]
-                elif (str(member.global_name) != str(member)):
+                if(member.global_name!=None):
                     TotalDeaths[str(member.global_name)]=TotalDeaths[str(member)]
-                    del TotalDeaths[str(member)] 
+                    del TotalDeaths[str(member)]
         print(TotalDeaths)
         keys = list(TotalDeaths.keys())
         values = list(TotalDeaths.values())
@@ -530,12 +514,9 @@ async def process_msg(msg):
 
         for member in msg.guild.members:
             if(str(member) in TotalKDA.keys()):
-                if(member.nick != None):
-                    TotalKDA[str(member.nick)]=TotalKDA[str(member)]
-                    del TotalKDA[str(member)]
-                else:
+                if(member.global_name!=None):
                     TotalKDA[str(member.global_name)]=TotalKDA[str(member)]
-                    del TotalKDA[str(member)]      
+                    del TotalKDA[str(member)]     
         keys = list(TotalKDA.keys())
         values = list(TotalKDA.values())
         sorted_value_index = np.argsort(values)
