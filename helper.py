@@ -480,14 +480,18 @@ async def process_msg(msg):
                 TotalDeaths[Name]=Deaths
 
         for member in msg.guild.members:
-            print(member.global_name)
-            print(str(member) +'is '+ str(member.nick))
+            #print(member.global_name)
+            print(member)
+            print(TotalDeaths.keys())
+            print(str(member) in TotalDeaths.keys())
             if(str(member) in TotalDeaths.keys()):
-                
+                print("HELLO")
                 if(member.nick != None):
                     TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
                     del TotalDeaths[str(member)]
-                
+                else:
+                    TotalDeaths[str(member.global_name)]=TotalDeaths[str(member)]
+                    del TotalDeaths[str(member)] 
         print(TotalDeaths)
         keys = list(TotalDeaths.keys())
         values = list(TotalDeaths.values())
