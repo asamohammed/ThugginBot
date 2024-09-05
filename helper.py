@@ -475,9 +475,10 @@ async def process_msg(msg):
                 TotalDeaths[Name]=Deaths
 
         for member in msg.guild.members:
+            print(member.global_name)
+            print(str(member) +'is '+ str(member.nick))
             if(str(member) in TotalDeaths.keys()):
-                print(member.global_name)
-                print(str(member) +'is '+ str(member.nick))
+                
                 if(member.nick != None):
                     TotalDeaths[str(member.nick)]=TotalDeaths[str(member)]
                     del TotalDeaths[str(member)]
