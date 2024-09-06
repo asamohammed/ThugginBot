@@ -23,7 +23,7 @@ async def UpdateCurrentWords():
 async def process_msg(msg):
     # Get message text
     
-    water=random.randint(0,100)
+    water=random.randint(0,200)
     if(water==13):
         await msg.channel.send('D R I N K  W A T E R')
 
@@ -372,8 +372,8 @@ async def process_msg(msg):
             return
         elif not msg.mentions:
             await msg.channel.send("*STOoOoPID, DIDN\'T TAG \'EM*")
-        elif len(msg.attachments)==0:
-            await msg.channel.send('**You Gotta Actually Fire the Shot!!**') 
+        #elif len(msg.attachments)==0:
+        #    await msg.channel.send('**You Gotta Actually Fire the Shot!!**') Removed bc remixes are a thing
         else:
             if(str(author) not in listOfNames):
                 newPerson={'Name': str(author),'Kills':0,'Deaths':0,'KDA':0}
