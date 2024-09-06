@@ -23,7 +23,7 @@ async def UpdateCurrentWords():
 async def process_msg(msg):
     # Get message text
     
-    water=random.randint(0,100)
+    water=random.randint(0,200)
     if(water==13):
         await msg.channel.send('D R I N K  W A T E R')
 
@@ -248,7 +248,8 @@ async def process_msg(msg):
                 #print(row)
                 
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 Likes=float(row['Likes'])
                 TotalLikes[Name]=Likes
                 #print(TotalLikes)
@@ -288,7 +289,8 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 Dislikes=float(row['Dislikes'])
 
                 TotalDislikes[Name]=Dislikes
@@ -326,7 +328,8 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 Clout=float(row['Clout'])
                 
                 TotalClout[Name]=Clout
@@ -362,6 +365,7 @@ async def process_msg(msg):
     elif text.startswith('!sniped '):
         #print(msg.attachments)
         author=msg.author
+        print(author)
         df3=pd.read_csv('snipe.csv')
         listOfNames= df3['Name'].values
         if msg.author == msg.mentions[0]:
@@ -372,8 +376,8 @@ async def process_msg(msg):
             return
         elif not msg.mentions:
             await msg.channel.send("*STOoOoPID, DIDN\'T TAG \'EM*")
-        elif len(msg.attachments)==0:
-            await msg.channel.send('**You Gotta Actually Fire the Shot!!**') 
+        #elif len(msg.attachments)==0:
+        #    await msg.channel.send('**You Gotta Actually Fire the Shot!!**') Removed bc remixes are a thing
         else:
             if(str(author) not in listOfNames):
                 newPerson={'Name': str(author),'Kills':0,'Deaths':0,'KDA':0}
@@ -422,7 +426,8 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 Kills=float(row['Kills'])
 
 
@@ -462,7 +467,8 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 Deaths=float(row['Deaths'])
 
                 TotalDeaths[Name]=Deaths
@@ -507,7 +513,8 @@ async def process_msg(msg):
             #csv_reader=next(csv_reader)
             for row in csv_reader:
                 Name=row['Name']
-                Name=Name[:-2]
+                if Name.endswith('#0'):
+                    Name=Name[:-2]
                 KDA=float(row['KDA'])
 
                 TotalKDA[Name]=KDA
