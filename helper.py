@@ -34,8 +34,13 @@ async def process_msg(msg):
     # --== ThugginBot Commands ==--
     if text[0]=='!' and   text[1:length] in CurentWords.keys():
         text=text[1:length]
+        Img=CurentWords[text]
         #await thugginbot.checkThugginBotCommand(msg)
-        await msg.channel.send(CurentWords[text])
+        if(type(Img) is list):
+            hi=random.randint(0,len(Img)-1)
+            Img=Img[hi]
+            
+        await msg.channel.send(Img)
         BotWord=''
         for letter in text:
             UpLetter=letter.upper()
@@ -80,7 +85,9 @@ async def process_msg(msg):
                 RandomWord=random.randint(0,len(Keys)-1)
                 Word=Keys[RandomWord]
                 Img=Word
-
+        if(type(Img) is list):
+            hi=random.randint(0,len(Img)-1)
+            Img=Img[hi]
         await msg.channel.send(CurentWords[Word])
         BotWord=''
         for letter in Word:
