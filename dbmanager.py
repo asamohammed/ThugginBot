@@ -187,16 +187,6 @@ async def add_thugginbot_word(word, img_url):
     try:
         # if img_url == 'no-img-input':
         await connection.execute(f"INSERT INTO thugginbot_words VALUES ('{word}', '{img_url}');")
-        with open("words.json","r") as f:
-            data=json.load(f)
-        temp={word:img_url} #need to add a way to upload img to imigur and get link through api
-        data.update(temp)
-        NewRow=[word,0.0]
-        with open('TimesUsed.csv','a') as U:
-            WrittenObject=writer(U)
-            WrittenObject.writerow(NewRow)
-            U.close
-        helper.UpdateCurrentWords()
         #adds the new word to the csv file 
         
 

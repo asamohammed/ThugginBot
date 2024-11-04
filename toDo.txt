@@ -1,5 +1,6 @@
 List of things tht still need to be done
 Integrate imigur to autimatically upload images and put the urls into words.json
-make sure deleating with the website is removeing form words.json
 Make a club discord bot account and transfer that to the discord so else isnt tied to thugginbot
 add a way to dm someone every word 
+see if i can auto sign people in
+make it so if a word isnt in most used it adds it

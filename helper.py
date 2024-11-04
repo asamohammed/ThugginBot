@@ -8,10 +8,11 @@ import csv
 import pandas as pd
 from collections import OrderedDict
 import numpy as np
+from csv import writer
 
 df=pd.read_csv("TimesUsed.csv")
 
-
+devid="superice0"
 
 with open("words.json","r") as f:
     CurentWords=json.load(f)
@@ -30,9 +31,56 @@ async def process_msg(msg):
     text = msg.content.lower()
     
     
-    length=len(text)  
+    length=len(text)
+    
+    if "!upload" in text and str(msg.author)==devid:
+        temp=text.split()
+        word=''
+        link=''
+        hold=temp[1]
+        hold2=temp[2]
+        if "http" in hold:
+            link=hold
+            word=hold2
+        else:
+            word=hold
+            link=hold2
+
+        if word in CurentWords.keys():
+            temp=CurentWords[word]
+            if isinstance(temp,list):
+                temp.append(link)
+
+                
+            else:
+                newList=[]
+                newList.append(temp)
+                newList.append(link)
+                CurentWords[word]=newList
+                
+
+        else:
+            CurentWords[word]=link
+            NewRow=[word,0.0]
+            with open('TimesUsed.csv','a') as U:
+                WrittenObject=writer(U)
+                WrittenObject.writerow(NewRow)
+                U.close
+        with open("words.json","w") as q:
+            json.dump(CurentWords,q)
+    elif "!remove" in text and str(msg.author)==devid:
+        df=pd.read_csv("TimesUsed.csv")
+        temp=text.split()
+        toRemove=temp[1]
+        check=CurentWords.pop(toRemove, None)
+        if check is not None:
+            df = df[df['Word'] != toRemove]
+            df.to_csv("TimesUsed.csv", index=False)
+            with open("words.json","w") as q:
+                json.dump(CurentWords,q)
     # --== ThugginBot Commands ==--
-    if text[0]=='!' and   text[1:length] in CurentWords.keys():
+    elif text[0]=='!' and   text[1:length] in CurentWords.keys():
+        df=pd.read_csv("TimesUsed.csv")
         text=text[1:length]
         Img=CurentWords[text]
         #await thugginbot.checkThugginBotCommand(msg)
@@ -71,36 +119,45 @@ async def process_msg(msg):
     # --== ThugginThursday Command ==--
     elif len(text) == 1 and datetime.date.today().weekday()==3:
        await thugginbot.handle_thugginbot_message(msg)
-
-
+    
+    
     # --== General Commands ==--
     elif text.startswith('!random'):
+        df=pd.read_csv("TimesUsed.csv")
         Keys=list(CurentWords.keys())
         RandomWord=random.randint(0,len(Keys)-1)
         Word=Keys[RandomWord]
+        #print(Word)
+        
         Img=Word
-        Bannedwords=['patg','hbd','naked']
+        Bannedwords=['patg','hbd']
         if(Img in Bannedwords):
             while Img in Bannedwords:
                 RandomWord=random.randint(0,len(Keys)-1)
                 Word=Keys[RandomWord]
                 Img=Word
-        if(type(Img) is list):
-            hi=random.randint(0,len(Img)-1)
-            Img=Img[hi]
-        await msg.channel.send(CurentWords[Word])
+        #Img=CurentWords["mikeshoremonday"]
+        sent=CurentWords[Img]
+        if(type(sent) is list):
+            hi=random.randint(0,len(sent)-1)
+            sent=sent[hi]
+        await msg.channel.send(sent)
         BotWord=''
         for letter in Word:
             BotWord=BotWord+letter.upper()
             BotWord=BotWord+' '
         await msg.channel.send(BotWord)
         Word=Word.lower()
+        #print(Word)
         mask = df['Word'] == Word
         result = df[df['Word'] == Word]
         temp=result['TimesUsed'].values[0]
+        #print(temp)
         temp=temp+1
         df.loc[mask, 'TimesUsed'] = temp
         df.to_csv("TimesUsed.csv", index=False)
+        #print("random added to timesUsed",Word)
+        
 
     elif text.startswith('!help'):
         await responses.post_help_command(msg)
@@ -279,7 +336,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfLikes=list(sorted_dict)
         LikeLeader='-__**Like Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfLikes)):
                 break
             else:
@@ -321,7 +378,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfDislikes=list(sorted_dict)
         DislikeLeader='-__**Dislike Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfDislikes)):
                 break
             else:
@@ -363,7 +420,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfClout=list(sorted_dict)
         CloutLeader='-__**Clout Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfClout)):
                 break
             else:
@@ -513,7 +570,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfDeaths=list(sorted_dict)
         SnipedLeader='-__**Sniped Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfDeaths)):
                 break
             else:
@@ -557,7 +614,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfKDA=list(sorted_dict)
         KDALeader='-__**KDA Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfKDA)):
                 break
             else:
@@ -587,25 +644,66 @@ async def process_msg(msg):
         await msg.channel.send(KDA)
         print('Post KDA')
         return
+    elif "mine" in text:
+        await msg.channel.send("W H O S E ?")
     
 async def process_workout(msg):
     df4=pd.read_csv('workout.csv')
     author=str(msg.author)
+    df4['Date'] = df4['Date'].astype(str)
     listOfNames= df4['Name'].values
+    current_time = datetime.datetime.now()
+    Date=str(current_time.month)+'/'+str(current_time.day)
+    Hour=current_time.hour
     if len(msg.attachments)==0:
         return 
     else:
         if(author not in listOfNames):
-                newPerson={'Name': author,'Workouts':1}
+                newPerson={'Name': author,'Workouts':1,'Date':Date,'Hour':Hour}
                 tdf=pd.DataFrame(newPerson,index=[0]) 
                 tdf.to_csv("workout.csv", mode='a', index=False,header=False)
                 df4=pd.read_csv('snipe.csv')
         else:
             mask = df4['Name'] == author
             result = df4[df4['Name'] == author] #gets the row with the target user
-            Workouts=result['Workouts'].values[0]
-            Workouts=Workouts+1
-            df4.loc[mask,'Workouts']=Workouts
-            df4.to_csv("workout.csv", index=False) #updates csv file
+            Day=result['Date'].values[0]
+            Time=result['Hour'].values[0]
+            print("Date",Day)
+            print("Time",Time)
+            if Day == Date and (Hour <= (Time+2)) :
+                print("too soon")
+            else:
+                Workouts=result['Workouts'].values[0]
+                Workouts=Workouts+1
+                df4.loc[mask,'Workouts']=Workouts
+                df4.loc[mask,'Date']=Date
+                df4.loc[mask,'Hour']=Hour
+                df4.to_csv("workout.csv", index=False) #updates csv file
+    if  msg.mentions:
+        for user in msg.mentions:
+            user=str(user)
+            if(user not in listOfNames):
+                newPerson={'Name': user,'Workouts':1,'Date':Date,'Hour':Hour}
+                tdf=pd.DataFrame(newPerson,index=[0]) 
+                tdf.to_csv("workout.csv", mode='a', index=False,header=False)
+                df4=pd.read_csv('snipe.csv')
+            else:
+                mask = df4['Name'] == user
+                result = df4[df4['Name'] == user] #gets the row with the target user
+                Day=result['Date'].values[0]
+                Time=result['Hour'].values[0]
+                if Day == Date and Hour <= (Time+2) :
+                    print("Hi")
+                else:
+                    Workouts=result['Workouts'].values[0]
+                    Workouts=Workouts+1
+                    df4.loc[mask,'Workouts']=Workouts
+                    df4.loc[mask,'Date']=Date
+                    df4.loc[mask,'Hour']=Hour
+                    df4.to_csv("workout.csv", index=False) #updates csv file
+
 
     
+
+
+
