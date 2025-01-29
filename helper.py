@@ -9,41 +9,66 @@ import pandas as pd
 from collections import OrderedDict
 import numpy as np
 from csv import writer
+import discord
+
 
 df=pd.read_csv("TimesUsed.csv")
 
 devid="superice0"
 
+
+
 with open("words.json","r") as f:
     CurentWords=json.load(f)
-
+with open("paramaters.json","r") as t:
+    ThugginComplete=json.load(t)
+    #print(ThugginComplete)
 
 async def UpdateCurrentWords():
     CurentWords=json.load(f)
-
+async def updateThugg():
+    ThugginComplete=json.load(t)
 async def process_msg(msg):
+    #print(datetime.datetime.today().weekday())
+    #print(ThugginComplete['thugginComplete'])
     # Get message text
-    
+    with open("paramaters.json","r") as t:
+        ThugginComplete=json.load(t)
+    if datetime.datetime.today().weekday()!=3 and ThugginComplete["thugginComplete"]:
+        with open("paramaters.json","w") as q:
+            thugging={"thugginComplete": False,"thugginInProgress": False}
+            json.dump(thugging,q)
     water=random.randint(0,200)
     if(water==13):
-        await msg.channel.send('D R I N K  W A T E R')
-
+        #print(paramaters.ThugginComplete)
+        #print(datetime.date.today().weekday())
+        if  datetime.datetime.today().weekday()==3:
+            #print('hi')
+            #print(ThugginComplete)
+            if ThugginComplete['thugginComplete']:
+                #print(paramaters.ThugginComplete)
+                await msg.channel.send('D R I N K  W A T E R')
+        else:
+            #print('why')
+            await msg.channel.send('D R I N K  W A T E R')
+    trueMsg=msg.content
     text = msg.content.lower()
     
     
     length=len(text)
     
     if "!upload" in text and str(msg.author)==devid:
-        temp=text.split()
+        temp=trueMsg.split()
         word=''
         link=''
         hold=temp[1]
         hold2=temp[2]
+
         if "http" in hold:
             link=hold
-            word=hold2
+            word=hold2.lower()
         else:
-            word=hold
+            word=hold.lower()
             link=hold2
 
         if word in CurentWords.keys():
@@ -78,7 +103,22 @@ async def process_msg(msg):
             df.to_csv("TimesUsed.csv", index=False)
             with open("words.json","w") as q:
                 json.dump(CurentWords,q)
+
     # --== ThugginBot Commands ==--
+   
+    elif datetime.datetime.today().weekday()==3 and ThugginComplete["thugginInProgress"] and len(text)>1 and not ThugginComplete["thugginComplete"]:
+        
+        author=msg.author
+        newPerson={'DiscordID':author}
+        tdf4=pd.DataFrame(newPerson,index=[0]) 
+        tdf4.to_csv("timeOut.csv", mode='a', index=False,header=False)
+        
+        await msg.channel.send(f"{author.mention} This isnt verry thuggin of you")
+        duration = datetime.timedelta(hours=1)
+        try:
+            await author.timeout(duration, reason="not Thuggin")
+        except discord.errors.Forbidden as e:
+                    mods=1
     elif text[0]=='!' and   text[1:length] in CurentWords.keys():
         df=pd.read_csv("TimesUsed.csv")
         text=text[1:length]
@@ -157,8 +197,15 @@ async def process_msg(msg):
         df.loc[mask, 'TimesUsed'] = temp
         df.to_csv("TimesUsed.csv", index=False)
         #print("random added to timesUsed",Word)
-        
-
+    elif text.startswith('!wordlist'):
+        dm='Current Words: '
+        for key in CurentWords.keys():
+            dm=dm+key+', '
+        length=len(dm) 
+        dm=dm[0:length-2]
+        user=msg.author
+        await msg.delete()
+        await user.send(dm)   
     elif text.startswith('!help'):
         await responses.post_help_command(msg)
 
@@ -522,7 +569,7 @@ async def process_msg(msg):
         #print(sorted_dict)
         ListOfKills=list(sorted_dict)
         KillLeader='-__**Kills Leaderboard**__-\n'
-        for x in range(0,9):
+        for x in range(0,10):
             if(x>=len(ListOfKills)):
                 break
             else:

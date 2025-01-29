@@ -10,7 +10,7 @@ import random
 
 
 async def post_help_command(msg):
-    message = "**--- __Commands:__ ---**\n**!(thuginBotWord)** Send that words picture.\n**!random** Send a random thugginBot Word.\n**!sawthat** Send saw that meme.\n**!love** @user.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!mostused** Sends the 5 most used thugginBot Words\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!kda** - Sends your KDA\n**!kdaleaderboard** - See 10 highest KDAs\n**!help** - See all of CloutBot\'s commands."
+    message = "**--- __Commands:__ ---**\n**!(thuginBotWord)** Send that words picture.\n**!wordlist** DMs a list of every current word\n**!random** Send a random thugginBot Word.\n**!sawthat** Send saw that meme.\n**!love** @user.\n**!tomatoes** @user Throw tomatoes at someone.\n**!like** @user.\n**!dislike** @user.\n**!mostused** Sends the 5 most used thugginBot Words\n**!sniped** @user. (must have photo)\n**!likeleaderboard** - See 10 most liked members.\n**!dislikeleaderboard** - See 10 most disliked members.\n**!cloutleaderboard** - See 10 members with the highest Clout (likes - dislikes).\n**!killsleaderboard** - See top 10 killers.\n**!snipedleaderboard** - See 10 most sniped members.\n**!kda** - Sends your KDA\n**!kdaleaderboard** - See 10 highest KDAs\n**!help** - See all of CloutBot\'s commands."
     await msg.channel.send(message)
 
 async def post_tomatos_command(msg):
@@ -76,7 +76,7 @@ async def post_like_leaderboard(msg):
     fetched_rows.sort(key=lambda x: x['likes'], reverse=True)
     message = '-__**Like Leaderboard**__-\n'
     
-    max_users_to_show = 10
+    max_users_to_show = 11
 
     # Loop through the list of database records
     for row_index, row in enumerate(fetched_rows[:max_users_to_show], 1):  # Get the top 10 members
@@ -103,7 +103,7 @@ async def post_dislike_leaderboard(msg):
     fetched_rows.sort(key=lambda x: x['dislikes'], reverse=True)
     message = '-__**Dislike Leaderboard**__-\n'
 
-    max_users_to_show = 10
+    max_users_to_show = 11
 
     # Loop through the list of database records
     for row_index, row in enumerate(fetched_rows[:max_users_to_show], 1):  # Get the top 10 members
@@ -130,7 +130,7 @@ async def post_clout_leaderboard(msg):
     fetched_rows.sort(key=lambda row: row['likes'] - row['dislikes'], reverse=True)
     message = '-__**Clout Leaderboard**__-\n'
 
-    max_users_to_show = 10
+    max_users_to_show = 11
 
     # Loop through the list of database records
     for row_index, row in enumerate(fetched_rows[:max_users_to_show], 1):  # Get the top 10 members
@@ -159,7 +159,7 @@ async def post_kills_leaderboard(msg):
     fetched_rows.sort(key=lambda x: x['kills'], reverse=True)
     message = '-__**Kills Leaderboard**__-\n'
 
-    max_users_to_show = 10
+    max_users_to_show = 11
 
     # Loop through the list of database records
     for row_index, row in enumerate(fetched_rows[:max_users_to_show], 1):  # Get the top 10 members
@@ -186,7 +186,7 @@ async def post_sniped_leaderboard(msg):
     fetched_rows.sort(key=lambda x: x['sniped'], reverse=True)
     message = '-__**Sniped Leaderboard**__-\n'
 
-    max_users_to_show = 10
+    max_users_to_show = 11
 
     # Loop through the list of database records
     for row_index, row in enumerate(fetched_rows[:max_users_to_show], 1):  # Get the top 10 members
