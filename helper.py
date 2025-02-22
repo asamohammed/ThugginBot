@@ -32,6 +32,8 @@ async def process_msg(msg):
     #print(datetime.datetime.today().weekday())
     #print(ThugginComplete['thugginComplete'])
     # Get message text
+    with open("words.json","r") as f:
+        CurentWords=json.load(f)
     with open("paramaters.json","r") as t:
         ThugginComplete=json.load(t)
     if datetime.datetime.today().weekday()!=3 and ThugginComplete["thugginComplete"]:
