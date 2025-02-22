@@ -4,7 +4,7 @@ import helper
 from keep_alive import keep_alive
 from dotenv import load_dotenv
 import pandas as pd
-
+import random
 load_dotenv()
 
 # Initalize bot
@@ -44,6 +44,11 @@ async def on_message(msg):
         await helper.process_msg(msg)
     elif msg.channel.name in ('workouts-and-fitness', 'grinch-workout-and-fitness','geh-workout-and-conditioning'):
         await helper.process_workout(msg)
+    elif msg.channel.name in ('grinch-team-chat'):
+        temp=random.randint(1,52)
+        if temp==52:
+            await msg.channel.send('https://imgur.com/oWX9OtO')
+        
 
 
 # Keep Bot alive by pinging flask server 

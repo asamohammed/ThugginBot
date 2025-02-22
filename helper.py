@@ -57,7 +57,7 @@ async def process_msg(msg):
     
     length=len(text)
     
-    if "!upload" in text and str(msg.author)==devid:
+    if text.startswith("!upload") and str(msg.author)==devid:
         temp=trueMsg.split()
         word=''
         link=''
@@ -93,7 +93,7 @@ async def process_msg(msg):
                 U.close
         with open("words.json","w") as q:
             json.dump(CurentWords,q)
-    elif "!remove" in text and str(msg.author)==devid:
+    elif text.startswith("!removeall") and str(msg.author)==devid:
         df=pd.read_csv("TimesUsed.csv")
         temp=text.split()
         toRemove=temp[1]
@@ -103,7 +103,69 @@ async def process_msg(msg):
             df.to_csv("TimesUsed.csv", index=False)
             with open("words.json","w") as q:
                 json.dump(CurentWords,q)
+    elif text.startswith("!removespecific") and str(msg.author)==devid:
+        temp=text.split(' ')
+        toRemove=temp[1]
+        index=int(temp[2])
+        allWords={}
+        with open("words.json","r") as f:
+            allWords=json.load(f)
+        hold=allWords[toRemove]
+        temp=hold.pop(index)
+        with open("words.json","w") as q:
+                CurentWords=allWords
+                json.dump(allWords,q)
+    elif text.startswith('!len') and str(msg.author)==devid:
+        with open("words.json","r") as f:
+            CurentWords=json.load(f)
+        hold=text.split(' ',1)
+        thugginWord=hold[1]
+        try:
+            img=CurentWords[thugginWord]
+            if(type(img) is list):
+                howMany=len(img)
+            else:
+                howMany=1
+            
+            if howMany==1:
+                await msg.channel.send(f"{thugginWord} only has {howMany} photo")
+            else:
+                await msg.channel.send(f"{thugginWord} has {howMany} pictures associated with it")
+                #print(img)
+        except KeyError:
+            await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
+            
+        
+    elif text.startswith('!specific') and str(msg.author)==devid:
+        hold=text.split(' ',2)
+        thugginWord=hold[1]
+        num=int(hold[2])
+        try:
+            img=CurentWords[thugginWord]
+            if(type(img) is list):
+                howMany=len(img)
+                picture=img[num]
+                await msg.channel.send(picture)
+                BotWord=''
+                for letter in thugginWord:
+                    
+                    BotWord=BotWord+letter
+                    
+                await msg.channel.send(BotWord+' '+str(num))
+            else:
+                await msg.channel.send(img)
+                BotWord=''
+                for letter in thugginWord:
 
+                    BotWord=BotWord+letter
+                await msg.channel.send(BotWord)
+                
+        except KeyError:
+            await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
+
+    elif text.startswith("!devhelp") and str(msg.author)==devid:
+        message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**"
+        await msg.channel.send(message)
     # --== ThugginBot Commands ==--
    
     elif datetime.datetime.today().weekday()==3 and ThugginComplete["thugginInProgress"] and len(text)>1 and not ThugginComplete["thugginComplete"]:
@@ -113,7 +175,7 @@ async def process_msg(msg):
         tdf4=pd.DataFrame(newPerson,index=[0]) 
         tdf4.to_csv("timeOut.csv", mode='a', index=False,header=False)
         
-        await msg.channel.send(f"{author.mention} This isnt verry thuggin of you")
+        await msg.channel.send(f"{author.mention} This isnt very thuggin of you")
         duration = datetime.timedelta(hours=1)
         try:
             await author.timeout(duration, reason="not Thuggin")
