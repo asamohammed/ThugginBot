@@ -137,6 +137,8 @@ async def process_msg(msg):
             
         
     elif text.startswith('!specific') and str(msg.author)==devid:
+        with open("words.json","r") as f:
+            CurentWords=json.load(f)
         hold=text.split(' ',2)
         thugginWord=hold[1]
         num=int(hold[2])
