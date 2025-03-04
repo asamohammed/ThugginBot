@@ -38,9 +38,9 @@ async def process_msg(msg):
         ThugginComplete=json.load(t)
     if datetime.datetime.today().weekday()!=3 and ThugginComplete["thugginComplete"]:
         with open("paramaters.json","w") as q:
-            thugging={"thugginComplete": False,"thugginInProgress": False}
+            thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
             json.dump(thugging,q)
-    water=random.randint(0,200)
+    water=random.randint(0,ThugginComplete["drinkWaterOdds"])
     if(water==13):
         #print(paramaters.ThugginComplete)
         #print(datetime.date.today().weekday())
@@ -168,8 +168,23 @@ async def process_msg(msg):
             await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
 
     elif text.startswith("!devhelp") and str(msg.author)==devid:
-        message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**"
+        message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**\n**!changewater + num (>=13): changes the odds of drink water appearing**\n**!sendmsg +msg: sends a message as thugging bot to all-club-chat**"
         await msg.channel.send(message)
+    elif text.startswith("!changewater") and str(msg.author)==devid:
+        water=text.split(' ')
+        water=int(water[1])
+        if water >=13:
+            with open("paramaters.json","r") as t:
+                ThugginComplete=json.load(t)
+            with open("paramaters.json","w") as q:
+                paramaters={"thugginComplete": ThugginComplete['thugginComplete'],"thugginInProgress": ThugginComplete['thugginInProgress'],"drinkWaterOdds":water}
+                json.dump(paramaters,q)
+    elif text.startswith("!sendmsg ") and str(msg.author)==devid:
+        message=trueMsg.split(' ',1)
+        message=message[1]
+        msg.channel = discord.utils.get(msg.guild.channels, name='all-club-chat')
+        await(msg.channel.send(message))
+
     # --== ThugginBot Commands ==--
    
     elif datetime.datetime.today().weekday()==3 and ThugginComplete["thugginInProgress"] and len(text)>1 and not ThugginComplete["thugginComplete"]:
@@ -263,6 +278,28 @@ async def process_msg(msg):
         df.loc[mask, 'TimesUsed'] = temp
         df.to_csv("TimesUsed.csv", index=False)
         #print("random added to timesUsed",Word)
+
+    elif text.startswith('!all '):
+        attempt=text.split(' ')
+        word=attempt[1]
+        if word in CurentWords.keys():
+            all=CurentWords[word]
+            for pic in all:
+                await msg.channel.send(pic)
+            BotWord=''
+            for letter in word:
+                BotWord=BotWord+letter.upper()
+                BotWord=BotWord+' '
+            await msg.channel.send(BotWord + 'X '+str(len(all)))
+            df=pd.read_csv("TimesUsed.csv")
+            mask = df['Word'] == word
+            result = df[df['Word'] == word]
+            temp=result['TimesUsed'].values[0]
+            #print(temp)
+            temp=temp+1
+            df.loc[mask, 'TimesUsed'] = temp
+            df.to_csv("TimesUsed.csv", index=False)
+            
     elif text.startswith('!wordlist'):
         dm='Current Words: '
         for key in CurentWords.keys():

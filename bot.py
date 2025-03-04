@@ -45,7 +45,7 @@ async def on_message(msg):
     elif msg.channel.name in ('workouts-and-fitness', 'grinch-workout-and-fitness','geh-workout-and-conditioning'):
         await helper.process_workout(msg)
     elif msg.channel.name in ('grinch-team-chat'):
-        temp=random.randint(1,52)
+        temp=random.randint(1,200)
         if temp==52:
             await msg.channel.send('https://imgur.com/oWX9OtO')
         
