@@ -21,7 +21,7 @@ async def handle_thugginbot_message(msg):
         if not ThugginComplete["thugginInProgress"] and not ThugginComplete["thugginComplete"]:
             
             with open("paramaters.json","w") as q:
-                thugging={"thugginComplete": False,"thugginInProgress":True}
+                thugging=thugging={"thugginComplete": False,"thugginInProgress": True,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
                 json.dump(thugging,q)
             with open("paramaters.json","r") as t:
                 ThugginComplete=json.load(t)
@@ -60,7 +60,7 @@ async def handle_thugginbot_message(msg):
                 if not ThugginComplete["thugginComplete"]:
                     await msg.channel.send("T H U G G I N T H U R S D A Y")
                 with open("paramaters.json","w") as q:
-                    thugging={"thugginComplete": True,"thugginInProgress":False}
+                    thugging=thugging={"thugginComplete": True,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
                     json.dump(thugging,q)
                 with open("paramaters.json","r") as t:
                     ThugginComplete=json.load(t)
