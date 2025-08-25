@@ -14,7 +14,7 @@ import discord
 
 df=pd.read_csv("TimesUsed.csv")
 
-devid="superice0"
+devid=["superice0","darkdare0926","nokken29"]
 
 
 
@@ -38,8 +38,9 @@ async def process_msg(msg):
         ThugginComplete=json.load(t)
     if datetime.datetime.today().weekday()!=3 and ThugginComplete["thugginComplete"]:
         with open("paramaters.json","w") as q:
-            thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
-            json.dump(thugging,q)
+            #thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
+            ThugginComplete['thugginComplete']=False
+            json.dump(ThugginComplete,q)
     water=random.randint(0,ThugginComplete["drinkWaterOdds"])
     if(water==13):
         #print(paramaters.ThugginComplete)
@@ -59,7 +60,7 @@ async def process_msg(msg):
     
     length=len(text)
     
-    if text.startswith("!upload") and str(msg.author)==devid:
+    if text.startswith("!upload") and str(msg.author) in devid:
         temp=trueMsg.split()
         word=''
         link=''
@@ -95,7 +96,7 @@ async def process_msg(msg):
                 U.close
         with open("words.json","w") as q:
             json.dump(CurentWords,q)
-    elif text.startswith("!removeall") and str(msg.author)==devid:
+    elif text.startswith("!removeall") and str(msg.author) in devid:
         df=pd.read_csv("TimesUsed.csv")
         temp=text.split()
         toRemove=temp[1]
@@ -105,7 +106,7 @@ async def process_msg(msg):
             df.to_csv("TimesUsed.csv", index=False)
             with open("words.json","w") as q:
                 json.dump(CurentWords,q)
-    elif text.startswith("!removespecific") and str(msg.author)==devid:
+    elif text.startswith("!removespecific") and str(msg.author) in devid:
         temp=text.split(' ')
         toRemove=temp[1]
         index=int(temp[2])
@@ -117,7 +118,7 @@ async def process_msg(msg):
         with open("words.json","w") as q:
                 CurentWords=allWords
                 json.dump(allWords,q)
-    elif text.startswith('!len') and str(msg.author)==devid:
+    elif text.startswith('!len') and str(msg.author) in devid:
         with open("words.json","r") as f:
             CurentWords=json.load(f)
         hold=text.split(' ',1)
@@ -138,7 +139,7 @@ async def process_msg(msg):
             await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
             
         
-    elif text.startswith('!specific') and str(msg.author)==devid:
+    elif text.startswith('!specific') and str(msg.author) in devid:
         with open("words.json","r") as f:
             CurentWords=json.load(f)
         hold=text.split(' ',2)
@@ -167,19 +168,20 @@ async def process_msg(msg):
         except KeyError:
             await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
 
-    elif text.startswith("!devhelp") and str(msg.author)==devid:
+    elif text.startswith("!devhelp") and str(msg.author) in devid:
         message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**\n**!changewater + num (>=13): changes the odds of drink water appearing**\n**!sendmsg +msg: sends a message as thugging bot to all-club-chat**"
         await msg.channel.send(message)
-    elif text.startswith("!changewater") and str(msg.author)==devid:
+    elif text.startswith("!changewater") and str(msg.author) in devid:
         water=text.split(' ')
         water=int(water[1])
         if water >=13:
             with open("paramaters.json","r") as t:
                 ThugginComplete=json.load(t)
             with open("paramaters.json","w") as q:
-                paramaters={"thugginComplete": ThugginComplete['thugginComplete'],"thugginInProgress": ThugginComplete['thugginInProgress'],"drinkWaterOdds":water}
-                json.dump(paramaters,q)
-    elif text.startswith("!sendmsg ") and str(msg.author)==devid:
+                #paramaters={"thugginComplete": ThugginComplete['thugginComplete'],"thugginInProgress": ThugginComplete['thugginInProgress'],"drinkWaterOdds":water}
+                ThugginComplete['drinkWaterOdds']=water
+                json.dump(ThugginComplete,q)
+    elif text.startswith("!sendmsg ") and str(msg.author) in devid:
         message=trueMsg.split(' ',1)
         message=message[1]
         msg.channel = discord.utils.get(msg.guild.channels, name='all-club-chat')
@@ -268,14 +270,21 @@ async def process_msg(msg):
             BotWord=BotWord+letter.upper()
             BotWord=BotWord+' '
         await msg.channel.send(BotWord)
-        Word=Word.lower()
-        #print(Word)
-        mask = df['Word'] == Word
+        Word = Word.lower()
         result = df[df['Word'] == Word]
-        temp=result['TimesUsed'].values[0]
-        #print(temp)
-        temp=temp+1
-        df.loc[mask, 'TimesUsed'] = temp
+
+        if not result.empty:
+            # Word already exists → increment TimesUsed
+            temp = result['TimesUsed'].values[0]
+            df.loc[df['Word'] == Word, 'TimesUsed'] = temp + 1
+        else:
+            # Word doesn’t exist → add with TimesUsed = 1
+            temp = 1
+            new_row = {'Word': Word, 'TimesUsed': temp}
+            df = df._append(new_row, ignore_index=True)  # .append() if pandas < 2.0
+
+        # Save back to CSV
+        
         df.to_csv("TimesUsed.csv", index=False)
         #print("random added to timesUsed",Word)
 
@@ -291,13 +300,20 @@ async def process_msg(msg):
                 BotWord=BotWord+letter.upper()
                 BotWord=BotWord+' '
             await msg.channel.send(BotWord + 'X '+str(len(all)))
+
             df=pd.read_csv("TimesUsed.csv")
             mask = df['Word'] == word
             result = df[df['Word'] == word]
-            temp=result['TimesUsed'].values[0]
-            #print(temp)
-            temp=temp+1
-            df.loc[mask, 'TimesUsed'] = temp
+
+            if not result.empty:
+                temp = result['TimesUsed'].values[0]
+                temp = temp + 1
+                df.loc[mask, 'TimesUsed'] = temp
+            else:
+                temp = 1
+                new_row = {'Word': word, 'TimesUsed': temp}
+                df = df._append(new_row, ignore_index=True)  # or .append if pandas < 2.0
+
             df.to_csv("TimesUsed.csv", index=False)
             
     elif text.startswith('!wordlist'):
