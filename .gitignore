@@ -3,3 +3,6 @@
 /__pycache__
 test.py
 test_img.png
+messagecount.csv
+words.json
+TimesUsed.csv

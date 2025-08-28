@@ -10,6 +10,7 @@ from collections import OrderedDict
 import numpy as np
 from csv import writer
 import discord
+import aiohttp
 
 
 df=pd.read_csv("TimesUsed.csv")
@@ -28,7 +29,7 @@ async def UpdateCurrentWords():
     CurentWords=json.load(f)
 async def updateThugg():
     ThugginComplete=json.load(t)
-async def process_msg(msg):
+async def process_msg(msg,token):
     #print(datetime.datetime.today().weekday())
     #print(ThugginComplete['thugginComplete'])
     # Get message text
@@ -41,6 +42,47 @@ async def process_msg(msg):
             #thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
             ThugginComplete['thugginComplete']=False
             json.dump(ThugginComplete,q)
+    if datetime.datetime.today().weekday() == 6 and ThugginComplete['pickup'] and not ThugginComplete['pickupsent']:
+        channelID = '1148302956559618098'
+        HEADERS = {
+            "Authorization": f"Bot {token}",
+            "Content-Type": "application/json"
+        }
+
+        url = f"https://discord.com/api/v10/channels/{channelID}/messages"
+
+        payload = {
+            #"content": "📅 What day are you free this week?",
+            "poll": {
+                "question": {"text": "📅 What days are you free for pickup this week?"},
+                "answers": [
+                    {"poll_media": {"text": "Monday"}},
+                    {"poll_media": {"text": "Tuesday"}},
+                    {"poll_media": {"text": "Wednesday"}},
+                    {"poll_media": {"text": "Thursday"}},
+                    {"poll_media": {"text": "Friday"}},
+                    {"poll_media": {"text": "Saturday"}},
+                    {"poll_media": {"text": "Sunday"}}
+                ],
+                "allow_multiselect": True,
+                "duration": 48  # in Hours 
+            }
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=HEADERS, json=payload) as resp:
+                print("Status:", resp.status)
+                print("Response:", await resp.text())
+        with open("paramaters.json","w") as q:
+        #thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
+            ThugginComplete['pickupsent']=True
+            json.dump(ThugginComplete,q)
+    if datetime.datetime.today().weekday() != 6:
+        with open("paramaters.json","w") as q:
+        #thugging={"thugginComplete": False,"thugginInProgress": False,"drinkWaterOdds":ThugginComplete["drinkWaterOdds"]}
+            ThugginComplete['pickupsent']=False
+            json.dump(ThugginComplete,q)
+
     water=random.randint(0,ThugginComplete["drinkWaterOdds"])
     if(water==13):
         #print(paramaters.ThugginComplete)
@@ -114,10 +156,13 @@ async def process_msg(msg):
         with open("words.json","r") as f:
             allWords=json.load(f)
         hold=allWords[toRemove]
-        temp=hold.pop(index)
-        with open("words.json","w") as q:
-                CurentWords=allWords
-                json.dump(allWords,q)
+        if index >= len(hold):
+            await msg.channel.send(f"{index} is too big, you're a programmer we start at 0 here :)")
+        else:
+            temp=hold.pop(index)
+            with open("words.json","w") as q:
+                    CurentWords=allWords
+                    json.dump(allWords,q)
     elif text.startswith('!len') and str(msg.author) in devid:
         with open("words.json","r") as f:
             CurentWords=json.load(f)
@@ -169,7 +214,7 @@ async def process_msg(msg):
             await msg.channel.send(f"{thugginWord} isnt a word. Check your spelling Ethan")
 
     elif text.startswith("!devhelp") and str(msg.author) in devid:
-        message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**\n**!changewater + num (>=13): changes the odds of drink water appearing**\n**!sendmsg +msg: sends a message as thugging bot to all-club-chat**"
+        message = "**--- __DevCommands:__ ---**\n**!upload+word+link: Uploads new command/photo**\n**!removeall+word: removes all photos with word**\n**!removespecific+word+num: remove a specific photo from a command**\n**!len+word: shows how many photos are associated with the word**\n**!specific+word+num: specific photo from word**\n**!changewater + num (>=13): changes the odds of drink water appearing**\n**!sendmsg +msg: sends a message as thugging bot to all-club-chat**\n**!enablepickup: enables the pickup poll to send every sunday**\n**!disablepickup: disables pickup poll from sending every sunday**"
         await msg.channel.send(message)
     elif text.startswith("!changewater") and str(msg.author) in devid:
         water=text.split(' ')
@@ -186,6 +231,21 @@ async def process_msg(msg):
         message=message[1]
         msg.channel = discord.utils.get(msg.guild.channels, name='all-club-chat')
         await(msg.channel.send(message))
+
+    elif text.startswith('!enablepickup') and str(msg.author) in devid:
+        with open("paramaters.json","r") as t:
+                ThugginComplete=json.load(t)
+        with open("paramaters.json","w") as q:
+            #paramaters={"thugginComplete": ThugginComplete['thugginComplete'],"thugginInProgress": ThugginComplete['thugginInProgress'],"drinkWaterOdds":water}
+            ThugginComplete['pickup']=True
+            json.dump(ThugginComplete,q)
+    elif text.startswith('!disablepickup') and str(msg.author) in devid:
+        with open("paramaters.json","r") as t:
+                ThugginComplete=json.load(t)
+        with open("paramaters.json","w") as q:
+            #paramaters={"thugginComplete": ThugginComplete['thugginComplete'],"thugginInProgress": ThugginComplete['thugginInProgress'],"drinkWaterOdds":water}
+            ThugginComplete['pickup']=False
+            json.dump(ThugginComplete,q)
 
     # --== ThugginBot Commands ==--
    
@@ -318,8 +378,17 @@ async def process_msg(msg):
             
     elif text.startswith('!wordlist'):
         dm='Current Words: '
-        for key in CurentWords.keys():
-            dm=dm+key+', '
+        keylist=list(CurentWords.keys())
+        keylist.sort()
+        #print(keylist)
+        for key in keylist:
+            temp=CurentWords[key]
+            if isinstance(temp,list):
+                howMany=len(temp)
+            else:
+                howMany=1
+            keyhold=str(key).capitalize()
+            dm=dm+keyhold+f' [{howMany}], '
         length=len(dm) 
         dm=dm[0:length-2]
         user=msg.author
@@ -810,8 +879,10 @@ async def process_msg(msg):
         await msg.channel.send(KDA)
         print('Post KDA')
         return
+    
     elif "mine" in text:
         await msg.channel.send("W H O S E ?")
+    
     
 async def process_workout(msg):
     df4=pd.read_csv('workout.csv')

@@ -41,9 +41,9 @@ async def on_message(msg):
     
     # Process main chat
     elif msg.channel.name in ('all-club-chat', 'bot-testing') :
-        await helper.process_msg(msg)
+        await helper.process_msg(msg,token)
     elif msg.channel.name in ('workouts-and-fitness', 'grinch-workout-and-fitness','geh-workout-and-conditioning'):
-        await helper.process_workout(msg)
+        await helper.process_workout(msg,token)
     elif msg.channel.name in ('grinch-team-chat'):
         temp=random.randint(1,200)
         if temp==52:
